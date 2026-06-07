@@ -951,216 +951,13 @@
             line-height: 1.3;
         }
 
-        /* ===== PHONE BOTTOM SHEET ===== */
-        #phone-modal-backdrop {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.6);
-            z-index: 9999;
-            backdrop-filter: blur(3px);
-        }
-
-        #phone-modal-backdrop.open {
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-        }
-
-        #phone-modal-sheet {
-            width: 100%;
-            max-width: 420px;
-            background: #181818;
-            border-top: 1px solid rgba(194, 150, 101, 0.3);
-            border-radius: 20px 20px 0 0;
-            padding: 8px 0 32px;
-            transform: translateY(100%);
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        #phone-modal-backdrop.open #phone-modal-sheet {
-            transform: translateY(0);
-        }
-
-        .phone-sheet-handle {
-            width: 40px;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 2px;
-            margin: 12px auto 20px;
-        }
-
-        .phone-sheet-label {
-            font-size: 10px;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: #555;
-            text-align: center;
-            margin-bottom: 8px;
-        }
-
-        .phone-sheet-option {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 14px 28px;
-            color: #ccc;
-            text-decoration: none;
-            font-size: 16px;
-            letter-spacing: 0.05em;
-            transition: background 0.2s ease;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .phone-sheet-option:last-child {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .phone-sheet-option:active {
-            background: rgba(194, 150, 101, 0.1);
-        }
-
-        .phone-sheet-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(194, 150, 101, 0.12);
-            border: 1px solid rgba(194, 150, 101, 0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .phone-sheet-icon i {
-            font-size: 14px;
-            color: #c29665;
-        }
 
         /* ===== SCROLL NAV ===== */
         html {
             scroll-behavior: smooth;
         }
 
-        /* ===== FLOATING CONTACT BUTTONS ===== */
-        .floating-contact-group {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            z-index: 10010; /* Higher than lightbox (9999) and grab-fullview (10000) */
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            align-items: flex-end;
-        }
 
-        .floating-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            color: #fff;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            cursor: pointer;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* Base style for icons */
-        .floating-btn i {
-            font-size: 22px;
-            transition: transform 0.3s ease;
-        }
-
-        /* Hover effects */
-        .floating-btn:hover {
-            transform: translateY(-4px) scale(1.08);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
-            border-color: rgba(255, 255, 255, 0.25);
-        }
-
-        .floating-btn:hover i {
-            transform: scale(1.1);
-        }
-
-        /* LINE button style */
-        .floating-btn.btn-line {
-            background: rgba(6, 199, 85, 0.95);
-            border-color: rgba(6, 199, 85, 0.3);
-        }
-        .floating-btn.btn-line:hover {
-            background: rgb(5, 179, 76);
-            box-shadow: 0 8px 24px rgba(6, 199, 85, 0.5);
-        }
-
-        /* Messenger button style */
-        .floating-btn.btn-messenger {
-            background: rgba(0, 132, 255, 0.95);
-            border-color: rgba(0, 132, 255, 0.3);
-        }
-        .floating-btn.btn-messenger:hover {
-            background: rgb(0, 119, 230);
-            box-shadow: 0 8px 24px rgba(0, 132, 255, 0.5);
-        }
-
-        /* Phone button style */
-        .floating-btn.btn-phone {
-            background: rgba(194, 150, 101, 0.95); /* #c29665 brand color */
-            border-color: rgba(194, 150, 101, 0.3);
-        }
-        .floating-btn.btn-phone:hover {
-            background: rgb(179, 138, 91);
-            box-shadow: 0 8px 24px rgba(194, 150, 101, 0.5);
-        }
-
-        /* Labels on hover */
-        .floating-btn .btn-label {
-            position: absolute;
-            right: 62px;
-            background: rgba(12, 12, 12, 0.95);
-            color: #fff;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 300;
-            letter-spacing: 0.05em;
-            white-space: nowrap;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateX(10px);
-            transition: all 0.25s ease;
-            pointer-events: none;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-            font-family: 'Prompt', sans-serif;
-        }
-
-        .floating-btn:hover .btn-label {
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(0);
-        }
-
-        @media (max-width: 640px) {
-            .floating-contact-group {
-                bottom: 20px;
-                right: 20px;
-                gap: 10px;
-            }
-            .floating-btn {
-                width: 46px;
-                height: 46px;
-            }
-            .floating-btn i {
-                font-size: 20px;
-            }
-            .floating-btn .btn-label {
-                display: none;
-            }
-        }
     </style>
 </head>
 
@@ -1697,46 +1494,7 @@
     </div>
 
 
-    <!-- Phone Bottom Sheet Modal -->
-    <div id="phone-modal-backdrop" onclick="if(event.target===this)closePhoneModal()">
-        <div id="phone-modal-sheet">
-            <div class="phone-sheet-handle"></div>
-            <p class="phone-sheet-label">เลือกเบอร์ที่ต้องการติดต่อ</p>
-            <a href="tel:+66959649133" class="phone-sheet-option">
-                <div class="phone-sheet-icon"><i class="fas fa-phone"></i></div>
-                <div>
-                    <div style="font-size:17px;color:#fff;font-weight:300">095 964 9133 (ไท)</div>
-                    <div style="font-size:11px;color:#666;margin-top:2px">โทรหาเรา</div>
-                </div>
-            </a>
-            <a href="tel:+660809059263" class="phone-sheet-option">
-                <div class="phone-sheet-icon"><i class="fas fa-phone"></i></div>
-                <div>
-                    <div style="font-size:17px;color:#fff;font-weight:300">080 905 9263 (โม)</div>
-                    <div style="font-size:11px;color:#666;margin-top:2px">โทรหาเรา</div>
-                </div>
-            </a>
-        </div>
-    </div>
 
-    <!-- Floating Contact Action Group -->
-    <div class="floating-contact-group">
-        <!-- LINE OA -->
-        <a href="https://lin.ee/GzTqfhB" target="_blank" rel="noopener noreferrer" class="floating-btn btn-line" title="คุยทาง LINE">
-            <i class="fab fa-line"></i>
-            <span class="btn-label">LINE</span>
-        </a>
-        <!-- Facebook Messenger -->
-        <a href="https://m.me/61574810865271" target="_blank" rel="noopener noreferrer" class="floating-btn btn-messenger" title="คุยทาง Messenger">
-            <i class="fab fa-facebook-messenger"></i>
-            <span class="btn-label">Messenger</span>
-        </a>
-        <!-- Phone (โทร) -->
-        <button onclick="openPhoneModal(event)" class="floating-btn btn-phone" title="โทรติดต่อ">
-            <i class="fas fa-phone"></i>
-            <span class="btn-label">โทร</span>
-        </button>
-    </div>
 
     <!-- ============================================ -->
     <script>
@@ -1748,19 +1506,7 @@
             btn.querySelector('i').className = menu.classList.contains('hidden') ? 'fas fa-bars' : 'fas fa-times';
         }
 
-        /* ===== PHONE MODAL ===== */
-        function openPhoneModal(e) {
-            if (e) e.preventDefault();
-            document.getElementById('phone-modal-backdrop').classList.add('open');
-            document.body.style.overflow = 'hidden';
-        }
-        function closePhoneModal() {
-            document.getElementById('phone-modal-backdrop').classList.remove('open');
-            document.body.style.overflow = '';
-        }
-        document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape') closePhoneModal();
-        });
+
 
         /* ===== SCROLL NAV ===== */
         const nav = document.getElementById('main-nav');
