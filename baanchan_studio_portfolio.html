@@ -1,0 +1,1490 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baanchan Studio | Cinematography &amp; Photography</title>
+    <meta name="description" content="Baanchan Studio - Full-Service Production House สำหรับงาน Cinematography &amp; Photography ครบวงจร ทั้งวิดีโอโฆษณา, งานแต่ง, ถ่ายแฟชั่น และอีเวนต์">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Prompt:wght@200;300;400;500&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: '#c29665',
+                        dark: '#111111',
+                        darker: '#080808'
+                    },
+                    fontFamily: {
+                        sans: ['Prompt', 'sans-serif'],
+                        serif: ['Cinzel', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* ===== BASE ===== */
+        body { background-color: #080808; color: #e5e5e5; }
+
+        .bg-texture {
+            background-image: radial-gradient(circle at center, #1a1a1a 0%, #080808 100%);
+        }
+
+        .glass-nav {
+            background: linear-gradient(to bottom, rgba(8,8,8,0.92) 0%, rgba(8,8,8,0) 100%);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        /* ===== SELECTION ===== */
+        ::selection { background-color: #c29665; color: #000; }
+
+        /* ===== WORK CARD ===== */
+        .work-card { overflow: hidden; position: relative; }
+        .work-card .slide-img {
+            position: absolute; inset: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transition: opacity 1.2s ease, transform 8s ease;
+            opacity: 0;
+        }
+        .work-card .slide-img.active {
+            opacity: 1;
+            transform: scale(1.06);
+        }
+        .work-card .slide-img.prev {
+            opacity: 0;
+            transform: scale(1.0);
+        }
+        .work-card:hover .slide-img.active { transform: scale(1.09); }
+        .work-card .overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.18) 55%, transparent 100%);
+            transition: background 0.4s ease;
+        }
+        .work-card:hover .overlay {
+            background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.35) 60%, transparent 100%);
+        }
+        .work-card .card-content {
+            position: absolute; inset: 0;
+            display: flex; flex-direction: column; justify-content: flex-end;
+            padding: 1.5rem;
+            z-index: 2;
+        }
+
+        /* ===== ANIMATE ===== */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(28px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .fade-up { animation: fadeInUp 1s ease forwards; }
+        .delay-200 { animation-delay: .2s; opacity: 0; }
+        .delay-400 { animation-delay: .4s; opacity: 0; }
+        .delay-600 { animation-delay: .6s; opacity: 0; }
+        .delay-800 { animation-delay: .8s; opacity: 0; }
+
+        @keyframes breathe {
+            0%,100% { opacity: .12; }
+            50%      { opacity: .28; }
+        }
+        .hero-glow { animation: breathe 7s ease-in-out infinite; }
+
+        /* ===== DIVIDER ===== */
+        .divider {
+            width: 3rem; height: 1px;
+            background: linear-gradient(90deg, transparent, #c29665, transparent);
+        }
+
+        /* ===================================================================
+           LIGHTBOX — Album-based with swipe/touch + mobile responsive
+        =================================================================== */
+
+        /* Overlay */
+        #lightbox {
+            display: none;
+            position: fixed; inset: 0; z-index: 9999;
+            background: rgba(4,4,4,0.97);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+        #lightbox.open { display: flex; flex-direction: column; }
+
+        /* Close button */
+        #lb-close {
+            position: absolute; top: 16px; right: 16px;
+            width: 42px; height: 42px; border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(8,8,8,0.6);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: #bbb; font-size: 17px;
+            transition: all 0.25s ease; z-index: 100;
+            backdrop-filter: blur(4px);
+        }
+        #lb-close:hover {
+            border-color: #c29665; color: #c29665;
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        /* ===== IMAGE LIGHTBOX ===== */
+        #lb-image-wrap {
+            display: none;
+            width: 100%; height: 100%;
+            /* mobile: column; desktop: row */
+        }
+        #lb-image-wrap.active { display: flex; flex-direction: column; }
+        @media(min-width: 768px) {
+            #lb-image-wrap.active { flex-direction: row; }
+        }
+
+        /* Left: Album sidebar */
+        #lb-album-sidebar {
+            /* mobile: horizontal scroll strip at top */
+            display: flex;
+            flex-direction: row;
+            gap: 4px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 12px 16px;
+            flex-shrink: 0;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            scrollbar-width: thin;
+            scrollbar-color: rgba(194,150,101,0.3) transparent;
+        }
+        #lb-album-sidebar::-webkit-scrollbar { height: 3px; }
+        #lb-album-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(194,150,101,0.35); border-radius: 2px;
+        }
+        @media(min-width: 768px) {
+            #lb-album-sidebar {
+                flex-direction: column;
+                width: 200px;
+                min-width: 200px;
+                overflow-x: hidden;
+                overflow-y: auto;
+                padding: 20px 14px;
+                border-bottom: none;
+                border-right: 1px solid rgba(255,255,255,0.06);
+            }
+        }
+
+        /* Album cover card — image thumbnail as the album selector */
+        .lb-album-card {
+            position: relative;
+            flex-shrink: 0;
+            cursor: pointer;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 2px solid transparent;
+            transition: all 0.25s ease;
+            background: #111;
+            /* mobile: landscape strip */
+            width: 90px;
+            height: 64px;
+        }
+        @media(min-width: 768px) {
+            .lb-album-card {
+                width: 100%;
+                height: auto;
+                aspect-ratio: 4/3;
+            }
+        }
+        .lb-album-card img {
+            width: 100%; height: 100%; object-fit: cover;
+            opacity: 0.5;
+            transition: opacity 0.25s ease;
+        }
+        .lb-album-card.active {
+            border-color: #c29665;
+            box-shadow: 0 0 14px rgba(194,150,101,0.45);
+        }
+        .lb-album-card.active img,
+        .lb-album-card:hover img { opacity: 1; }
+        .lb-album-card-label {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            padding: 4px 6px;
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        .lb-album-card-label span {
+            font-size: 9px;
+            color: #ddd;
+            letter-spacing: 0.04em;
+            line-height: 1.2;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 70%;
+        }
+        .lb-album-card.active .lb-album-card-label span { color: #fff; }
+        .lb-album-card-label .alb-count {
+            font-size: 9px;
+            color: #c29665;
+            flex-shrink: 0;
+        }
+
+        /* Grab fullview overlay */
+        #grab-fullview {
+            display: none;
+            position: fixed; inset: 0; z-index: 10000;
+            background: rgba(0,0,0,0.96);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            align-items: center;
+            justify-content: center;
+        }
+        #grab-fullview.open { display: flex; }
+        #grab-fullview img {
+            max-width: 92vw;
+            max-height: 88vh;
+            object-fit: contain;
+            border-radius: 4px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.9);
+        }
+        #grab-fullview-close {
+            position: absolute; top: 16px; right: 16px;
+            width: 42px; height: 42px; border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(8,8,8,0.6);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: #bbb; font-size: 17px;
+            transition: all 0.25s ease; z-index: 100;
+        }
+        #grab-fullview-close:hover {
+            border-color: #c29665; color: #c29665;
+            transform: rotate(90deg) scale(1.1);
+        }
+        /* Zoom-in hint badge on grab items */
+        .lb-grab-zoom {
+            position: absolute;
+            top: 4px; right: 4px;
+            width: 18px; height: 18px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.7);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            pointer-events: none;
+        }
+        .lb-grab-zoom i { font-size: 8px; color: #c29665; }
+        .lb-grab-item:hover .lb-grab-zoom { opacity: 1; }
+
+        /* Right: Photo viewer */
+        #lb-photo-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-height: 0;
+        }
+
+        /* Main image display */
+        #lb-photo-main {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            min-height: 0;
+            touch-action: pan-y;
+            user-select: none;
+        }
+        #lb-main-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            display: block;
+            transition: opacity 0.2s ease, transform 0.3s ease;
+            pointer-events: none;
+        }
+
+        /* Arrow buttons on main display */
+        .lb-img-arrow {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background: rgba(8,8,8,0.55);
+            border: 1px solid rgba(194,150,101,0.25);
+            color: #c29665;
+            width: 40px; height: 40px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 10;
+            transition: all 0.25s ease;
+            backdrop-filter: blur(4px);
+            font-size: 13px;
+        }
+        .lb-img-arrow:hover {
+            background: rgba(194,150,101,0.2);
+            border-color: #c29665; color: #fff;
+            transform: translateY(-50%) scale(1.08);
+        }
+        .lb-img-arrow.prev { left: 10px; }
+        .lb-img-arrow.next { right: 10px; }
+
+        /* Thumbnail filmstrip at bottom of photo panel */
+        #lb-filmstrip {
+            display: flex;
+            flex-direction: row;
+            gap: 6px;
+            padding: 10px 14px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            flex-shrink: 0;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            scrollbar-width: thin;
+            scrollbar-color: rgba(194,150,101,0.3) transparent;
+        }
+        #lb-filmstrip::-webkit-scrollbar { height: 3px; }
+        #lb-filmstrip::-webkit-scrollbar-thumb {
+            background: rgba(194,150,101,0.35); border-radius: 2px;
+        }
+        .lb-film-item {
+            width: 56px; height: 42px;
+            flex-shrink: 0;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        .lb-film-item img {
+            width: 100%; height: 100%; object-fit: cover;
+            opacity: 0.5;
+            transition: opacity 0.25s ease;
+        }
+        .lb-film-item.active {
+            border-color: #c29665;
+            box-shadow: 0 0 10px rgba(194,150,101,0.4);
+        }
+        .lb-film-item.active img,
+        .lb-film-item:hover img { opacity: 1; }
+
+        /* Caption bar */
+        .lb-caption-bar {
+            padding: 10px 16px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+        .lb-caption-bar h4 { font-size: 13px; font-weight: 300; color: #fff; margin: 0; }
+        .lb-caption-bar p  { font-size: 11px; color: #888; margin: 0; }
+        .lb-caption-bar .lb-tag {
+            font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase;
+            color: #c29665; border: 1px solid rgba(194,150,101,0.35);
+            padding: 3px 8px; border-radius: 2px; white-space: nowrap; flex-shrink: 0;
+        }
+        .lb-counter {
+            font-size: 11px; color: #555;
+        }
+
+
+        /* ===== VIDEO LIGHTBOX ===== */
+        #lb-video-wrap {
+            display: none;
+            width: 100%; height: 100%;
+        }
+        #lb-video-wrap.active { display: flex; flex-direction: column; }
+        @media(min-width: 768px) {
+            #lb-video-wrap.active { flex-direction: row; }
+        }
+
+        /* Left/Main: Video player area */
+        #lb-video-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        #lb-video-player-wrap {
+            flex: 1;
+            position: relative;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        #lb-video-player {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        /* Video nav arrows */
+        .lb-vid-arrow {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background: rgba(8,8,8,0.55);
+            border: 1px solid rgba(194,150,101,0.25);
+            color: #c29665;
+            width: 40px; height: 40px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 10;
+            transition: all 0.25s ease;
+            backdrop-filter: blur(4px);
+            font-size: 13px;
+        }
+        .lb-vid-arrow:hover {
+            background: rgba(194,150,101,0.2);
+            border-color: #c29665; color: #fff;
+            transform: translateY(-50%) scale(1.08);
+        }
+        .lb-vid-arrow.prev { left: 12px; }
+        .lb-vid-arrow.next { right: 12px; }
+
+        /* Right: Grab stills sidebar */
+        #lb-grabs-sidebar {
+            display: flex;
+            flex-direction: row;
+            gap: 6px;
+            padding: 10px 14px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            flex-shrink: 0;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            scrollbar-width: thin;
+            scrollbar-color: rgba(194,150,101,0.3) transparent;
+        }
+        #lb-grabs-sidebar::-webkit-scrollbar { height: 3px; }
+        #lb-grabs-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(194,150,101,0.35); border-radius: 2px;
+        }
+        @media(min-width: 768px) {
+            #lb-grabs-sidebar {
+                flex-direction: column;
+                width: 160px;
+                min-width: 160px;
+                overflow-x: hidden;
+                overflow-y: auto;
+                padding: 14px 12px;
+                border-top: none;
+                border-left: 1px solid rgba(255,255,255,0.06);
+            }
+            #lb-grabs-sidebar::-webkit-scrollbar { width: 3px; height: auto; }
+        }
+
+        /* Grab still label */
+        .lb-grabs-label {
+            display: none;
+            font-size: 9px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #555;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        @media(min-width: 768px) { .lb-grabs-label { display: block; } }
+
+        .lb-grab-item {
+            position: relative;
+            flex-shrink: 0;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            background: #111;
+            /* mobile: fixed size; desktop: full width */
+            width: 80px;
+            height: 52px;
+        }
+        @media(min-width: 768px) {
+            .lb-grab-item {
+                width: 100%;
+                height: auto;
+                aspect-ratio: 16/9;
+            }
+        }
+        .lb-grab-item img {
+            width: 100%; height: 100%; object-fit: cover;
+            opacity: 0.5;
+            transition: opacity 0.25s ease;
+        }
+        .lb-grab-item.active img,
+        .lb-grab-item:hover img { opacity: 1; }
+
+        /* Video caption bar */
+        #lb-video-caption {
+            padding: 10px 16px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+        #lb-video-caption h4 { font-size: 13px; font-weight: 300; color: #fff; margin: 0; }
+        #lb-video-caption p  { font-size: 11px; color: #888; margin: 0; }
+        #lb-video-caption .lb-tag {
+            font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase;
+            color: #c29665; border: 1px solid rgba(194,150,101,0.35);
+            padding: 3px 8px; border-radius: 2px; white-space: nowrap; flex-shrink: 0;
+        }
+
+        /* ===== VIDEO CLIP THUMBNAIL STRIP ===== */
+        #lb-vid-clipstrip {
+            display: flex;
+            flex-direction: row;
+            gap: 6px;
+            padding: 10px 14px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            flex-shrink: 0;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            scrollbar-width: thin;
+            scrollbar-color: rgba(194,150,101,0.3) transparent;
+        }
+        #lb-vid-clipstrip::-webkit-scrollbar { height: 3px; }
+        #lb-vid-clipstrip::-webkit-scrollbar-thumb {
+            background: rgba(194,150,101,0.35); border-radius: 2px;
+        }
+        .lb-clip-item {
+            position: relative;
+            flex-shrink: 0;
+            border-radius: 5px;
+            overflow: hidden;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            background: #111;
+            width: 90px;
+            height: 58px;
+        }
+        @media(min-width: 768px) {
+            .lb-clip-item { width: 110px; height: 70px; }
+        }
+        .lb-clip-item img {
+            width: 100%; height: 100%; object-fit: cover;
+            opacity: 0.45;
+            transition: opacity 0.25s ease;
+        }
+        .lb-clip-item.active {
+            border-color: #c29665;
+            box-shadow: 0 0 12px rgba(194,150,101,0.45);
+        }
+        .lb-clip-item.active img,
+        .lb-clip-item:hover img { opacity: 1; }
+        .lb-clip-item-label {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            padding: 3px 6px;
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%);
+            font-size: 8px;
+            color: #ccc;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .lb-clip-item.active .lb-clip-item-label { color: #fff; }
+        .lb-clip-play-icon {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -60%);
+            width: 22px; height: 22px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.6);
+            display: flex; align-items: center; justify-content: center;
+            pointer-events: none;
+        }
+        .lb-clip-play-icon i { font-size: 8px; color: #c29665; margin-left: 1px; }
+
+        /* ===== Scrollbar global ===== */
+        * { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent; }
+        *::-webkit-scrollbar { width: 4px; height: 4px; }
+        *::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 2px; }
+
+        /* ===== SERVICE ITEM ===== */
+        .service-item {
+            transition: all .4s ease;
+            border-left: 2px solid transparent;
+            padding-left: 1rem;
+        }
+        .service-item:hover {
+            border-left-color: #c29665;
+            transform: translateX(4px);
+        }
+
+        /* ===== SOCIAL ICON ===== */
+        .social-icon { position: relative; }
+        .social-icon::before {
+            content: ''; position: absolute; inset: -3px;
+            border-radius: 50%; border: 1px solid transparent;
+            transition: all .4s ease;
+        }
+        .social-icon:hover::before { border-color: rgba(194,150,101,.4); inset: -6px; }
+
+        /* ===== ABOUT LOGO TEXT ===== */
+        .about-logo-text {
+            font-family: 'Cinzel', serif;
+            font-weight: 400;
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            letter-spacing: 0.28em;
+            color: #fff;
+            line-height: 1.3;
+        }
+
+        /* ===== SCROLL NAV ===== */
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+<body class="antialiased font-sans">
+
+    <!-- ============================================ -->
+    <!-- 1. NAVBAR                                    -->
+    <!-- ============================================ -->
+    <nav id="main-nav" class="fixed w-full z-50 glass-nav pt-6 pb-14 px-6">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <!-- Logo icon-only in nav -->
+            <div class="group cursor-pointer" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+                <img src="assets/Final ไม่มีตัวอักษร ไม่มีพื้นหลัง.png"
+                     alt="Baanchan Studio"
+                     class="h-10 md:h-12 w-auto transition-all duration-300 group-hover:scale-105 group-hover:opacity-80">
+            </div>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex gap-10 text-[11px] tracking-[0.2em] font-light text-gray-400 uppercase">
+                <a href="#about"    class="hover:text-brand transition duration-300 relative after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[1px] after:bg-brand after:transition-all after:duration-300 hover:after:w-full">About</a>
+                <a href="#works"    class="hover:text-brand transition duration-300 relative after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[1px] after:bg-brand after:transition-all after:duration-300 hover:after:w-full">Works</a>
+                <a href="#contact"  class="hover:text-brand transition duration-300 relative after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[1px] after:bg-brand after:transition-all after:duration-300 hover:after:w-full">Contact</a>
+            </div>
+
+            <!-- Hamburger -->
+            <button id="mobile-menu-btn" class="md:hidden text-gray-300 text-xl hover:text-brand transition duration-300" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="md:hidden hidden mt-6 pb-4 border-t border-white/10 pt-6">
+            <div class="flex flex-col gap-4 text-center text-sm tracking-[0.2em] text-gray-400 uppercase">
+                <a href="#about"    class="hover:text-brand transition duration-300" onclick="toggleMobileMenu()">About</a>
+                <a href="#works"    class="hover:text-brand transition duration-300" onclick="toggleMobileMenu()">Works</a>
+                <a href="#contact"  class="hover:text-brand transition duration-300" onclick="toggleMobileMenu()">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ============================================ -->
+    <!-- 2. HERO SECTION                              -->
+    <!-- ============================================ -->
+    <section id="hero" class="relative h-screen flex flex-col items-center justify-center text-center bg-texture px-6 overflow-hidden">
+        <!-- Ambient glow -->
+        <div class="hero-glow absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full pointer-events-none"
+             style="background: radial-gradient(circle, rgba(194,150,101,0.10) 0%, transparent 70%);"></div>
+        <div class="hero-glow absolute bottom-[-10%] right-[-5%] w-[50%] h-[50%] rounded-full pointer-events-none"
+             style="background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%); animation-delay: 3s;"></div>
+
+        <div class="relative z-10 flex flex-col items-center">
+            <!-- Hero logo with text (Final ไม่มีพื้นหลัง) -->
+            <div class="fade-up mb-8">
+                <img src="assets/Final ไม่มีพื้นหลัง.png"
+                     alt="Baanchan Studio"
+                     class="h-44 md:h-64 lg:h-72 w-auto">
+            </div>
+            <h1 class="sr-only">Baanchan Studio - Cinematography &amp; Photography</h1>
+
+            <div class="fade-up delay-400 divider mb-8 mx-auto"></div>
+
+            <p class="fade-up delay-600 text-[10px] md:text-xs text-brand tracking-[0.3em] uppercase leading-loose">
+                Cinematography <br class="md:hidden"> &amp; Photography
+            </p>
+            <p class="fade-up delay-800 text-[10px] md:text-xs text-gray-500 tracking-[0.25em] mt-3 uppercase">
+                Full-Service Production House
+            </p>
+        </div>
+
+        <a href="#about" class="absolute bottom-12 text-gray-600 hover:text-brand transition duration-500 animate-bounce">
+            <i class="fas fa-chevron-down text-lg"></i>
+        </a>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- 3. ABOUT SECTION                             -->
+    <!-- ============================================ -->
+    <section id="about" class="py-24 md:py-32 px-6 bg-dark">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                <!-- Text + Logo text -->
+                <div>
+                    <h3 class="text-brand tracking-[0.3em] uppercase text-[10px] md:text-xs mb-6 font-light">About Us</h3>
+                    <!-- BAANCHAN STUDIO text logo -->
+                    <div class="mb-8">
+                        <p class="about-logo-text">BAANCHAN<br>STUDIO</p>
+                    </div>
+                    <p class="text-gray-400 font-light text-sm leading-relaxed mb-8">
+                        แฝงตัวในทุกองค์ประกอบงานภาพยนตร์และงานโฆษณา ผ่านมุมมองและรสนิยมอย่างเอาใจใส่ เพื่อให้ผลงานของคุณออกมาสมบูรณ์แบบที่สุด ไม่ว่าจะเป็นสเกลงานระดับบุคคล หรือองค์กร
+                    </p>
+                    <a href="#contact" class="inline-block border border-gray-600 text-gray-300 px-8 py-3 text-[10px] tracking-[0.2em] uppercase hover:border-brand hover:text-brand hover:bg-brand/5 transition-all duration-300">
+                        View More
+                    </a>
+                </div>
+
+                <!-- Services list -->
+                <div id="services" class="space-y-6 border-l border-white/10 pl-8 md:pl-12">
+                    <div class="service-item">
+                        <h4 class="text-white text-sm tracking-wider mb-1.5">Commercial &amp; Production</h4>
+                        <p class="text-xs text-gray-500 font-light">วิดีโอโฆษณา, โปรดักชั่นเฮาส์, หนังสั้น, มิวสิควิดีโอ</p>
+                    </div>
+                    <div class="service-item">
+                        <h4 class="text-white text-sm tracking-wider mb-1.5">Wedding &amp; Pre-Wedding</h4>
+                        <p class="text-xs text-gray-500 font-light">ถ่ายภาพและวิดีโองานแต่ง, พรีเซนเทชั่น, ซีนีม่า</p>
+                    </div>
+                    <div class="service-item">
+                        <h4 class="text-white text-sm tracking-wider mb-1.5">Fashion &amp; Portrait</h4>
+                        <p class="text-xs text-gray-500 font-light">ถ่ายแฟชั่น, ถ่ายภาพบุคคล, โปรไฟล์สตูดิโอ</p>
+                    </div>
+                    <div class="service-item">
+                        <h4 class="text-white text-sm tracking-wider mb-1.5">Event &amp; Ceremony</h4>
+                        <p class="text-xs text-gray-500 font-light">ถ่ายภาพงานบวช, งานอีเวนต์ต่างๆ</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- 4. SELECTED WORKS                            -->
+    <!-- ============================================ -->
+    <section id="works" class="py-24 md:py-32 px-6 bg-darker">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-gray-100 text-2xl md:text-3xl font-light mb-2">ชมผลงาน</h2>
+                <p class="text-brand tracking-[0.3em] uppercase text-[10px] md:text-xs font-light">Selected Works</p>
+                <div class="divider mx-auto mt-6"></div>
+            </div>
+
+            <!-- Works grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+                <!-- 1. Commercial Video (type=video, albums with grab stills) -->
+                <div class="work-card group aspect-[4/5] cursor-pointer"
+                     onclick="openVideoLightbox('Cinematography', 'Short Film & โฆษณา & Wedding', 'Video', [
+                         {
+                             title: 'Commercial Vol.1',
+                             src: 'https://www.w3schools.com/html/mov_bbb.mp4',
+                             grabs: [
+                                 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?q=80&w=800&auto=format&fit=crop',
+                                 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=800&auto=format&fit=crop',
+                                 'https://images.unsplash.com/photo-1478720568477-152d9b164e26?q=80&w=800&auto=format&fit=crop'
+                             ]
+                         },
+                         {
+                             title: 'Commercial Vol.2',
+                             src: 'https://www.w3schools.com/html/mov_bbb.mp4',
+                             grabs: [
+                                 'https://images.unsplash.com/photo-1536240478700-b869ad10e2fd?q=80&w=800&auto=format&fit=crop',
+                                 'https://images.unsplash.com/photo-1533928298208-27ff66555d8d?q=80&w=800&auto=format&fit=crop'
+                             ]
+                         }
+                     ])">
+                    <!-- Slideshow images -->
+                    <img class="slide-img active" src="https://images.unsplash.com/photo-1590602847861-f357a9332bbc?q=80&w=800&auto=format&fit=crop" alt="">
+                    <img class="slide-img" src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=800&auto=format&fit=crop" alt="">
+                    <img class="slide-img" src="https://images.unsplash.com/photo-1478720568477-152d9b164e26?q=80&w=800&auto=format&fit=crop" alt="">
+                    <div class="overlay"></div>
+                    <div class="card-content">
+                        <span class="text-brand text-[9px] tracking-[0.2em] uppercase mb-1.5 border border-brand/60 px-2.5 py-1 w-max backdrop-blur-sm">Video</span>
+                        <h4 class="text-white text-lg font-light">Cinematography</h4>
+                        <p class="text-gray-400 text-xs mt-1 font-light">Short Film &amp; โฆษณา &amp; Wedding</p>
+                        <p class="text-brand/60 text-[9px] mt-2 tracking-wider uppercase flex items-center gap-1">
+                            <i class="fas fa-play-circle text-xs"></i> กดเพื่อชมผลงาน
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 2. Wedding (type=image, albums) -->
+                <div class="work-card group aspect-[4/5] cursor-pointer"
+                     onclick="openImageLightbox('Wedding &amp; Pre-Wedding', 'บันทึกความทรงจำวันสำคัญ', 'Photo / Video', [
+                         {
+                             album: 'Wedding Day',
+                             images: [
+                                 'https://images.unsplash.com/photo-1606490206149-6441b83141f2?q=80&w=1200&auto=format&fit=crop',
+                                 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=1200&auto=format&fit=crop',
+                                 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200&auto=format&fit=crop'
+                             ]
+                         },
+                         {
+                             album: 'Pre-Wedding',
+                             images: [
+                                 'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=80&w=1200&auto=format&fit=crop',
+                                 'https://images.unsplash.com/photo-1529634806980-85c3dd6d34ac?q=80&w=1200&auto=format&fit=crop'
+                             ]
+                         }
+                     ])">
+                    <img class="slide-img active" src="https://images.unsplash.com/photo-1606490206149-6441b83141f2?q=80&w=800&auto=format&fit=crop" alt="">
+                    <img class="slide-img" src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop" alt="">
+                    <img class="slide-img" src="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop" alt="">
+                    <div class="overlay"></div>
+                    <div class="card-content">
+                        <span class="text-gray-200 text-[9px] tracking-[0.2em] uppercase mb-1.5 border border-gray-400/40 px-2.5 py-1 w-max backdrop-blur-sm">Photo / Video</span>
+                        <h4 class="text-white text-lg font-light">Wedding &amp; Pre-Wedding</h4>
+                        <p class="text-gray-400 text-xs mt-1 font-light">บันทึกความทรงจำวันสำคัญ</p>
+                        <p class="text-brand/60 text-[9px] mt-2 tracking-wider uppercase flex items-center gap-1">
+                            <i class="fas fa-images text-xs"></i> กดเพื่อชมผลงาน
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 3. Fashion & Portrait (type=image, albums) -->
+                <div class="work-card group aspect-[4/5] cursor-pointer"
+                     onclick="openImageLightbox('Fashion &amp; Portrait', 'ถ่ายแฟชั่นและภาพบุคคล', 'Photo', [
+                         {
+                             album: 'Fashion',
+                             images: [
+                                 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1200&auto=format&fit=crop',
+                                 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?q=80&w=1200&auto=format&fit=crop'
+                             ]
+                         },
+                         {
+                             album: 'Portrait',
+                             images: [
+                                 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?q=80&w=1200&auto=format&fit=crop',
+                                 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=1200&auto=format&fit=crop'
+                             ]
+                         }
+                     ])">
+                    <img class="slide-img active" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop" alt="">
+                    <img class="slide-img" src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?q=80&w=800&auto=format&fit=crop" alt="">
+                    <img class="slide-img" src="https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?q=80&w=800&auto=format&fit=crop" alt="">
+                    <div class="overlay"></div>
+                    <div class="card-content">
+                        <span class="text-gray-200 text-[9px] tracking-[0.2em] uppercase mb-1.5 border border-gray-400/40 px-2.5 py-1 w-max backdrop-blur-sm">Photo</span>
+                        <h4 class="text-white text-lg font-light">Fashion &amp; Portrait</h4>
+                        <p class="text-gray-400 text-xs mt-1 font-light">ถ่ายแฟชั่นและภาพบุคคล</p>
+                        <p class="text-brand/60 text-[9px] mt-2 tracking-wider uppercase flex items-center gap-1">
+                            <i class="fas fa-images text-xs"></i> กดเพื่อชมผลงาน
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 4. Studio Photography (type=image, albums) -->
+                <div class="work-card group aspect-[4/5] cursor-pointer"
+                     onclick="openImageLightbox('Studio Photography', 'ถ่ายภาพสินค้าในสตูดิโอ', 'Photo', [
+                         {
+                             album: 'Product Studio',
+                             images: [
+                                 'https://images.unsplash.com/photo-1603574670812-d245b0afddfd?q=80&w=1200&auto=format&fit=crop',
+                                 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1200&auto=format&fit=crop',
+                                 'https://images.unsplash.com/photo-1491553895911-0055eca6402d?q=80&w=1200&auto=format&fit=crop'
+                             ]
+                         }
+                     ])">
+                    <img class="slide-img active" src="https://images.unsplash.com/photo-1603574670812-d245b0afddfd?q=80&w=800&auto=format&fit=crop" alt="">
+                    <img class="slide-img" src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=800&auto=format&fit=crop" alt="">
+                    <img class="slide-img" src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?q=80&w=800&auto=format&fit=crop" alt="">
+                    <div class="overlay"></div>
+                    <div class="card-content">
+                        <span class="text-gray-200 text-[9px] tracking-[0.2em] uppercase mb-1.5 border border-gray-400/40 px-2.5 py-1 w-max backdrop-blur-sm">Photo</span>
+                        <h4 class="text-white text-lg font-light">Studio Photography</h4>
+                        <p class="text-gray-400 text-xs mt-1 font-light">ถ่ายภาพสินค้าในสตูดิโอ</p>
+                        <p class="text-brand/60 text-[9px] mt-2 tracking-wider uppercase flex items-center gap-1">
+                            <i class="fas fa-images text-xs"></i> กดเพื่อชมผลงาน
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 5. Ordination / Event (type=image, albums) -->
+                <div class="work-card group aspect-[4/5] cursor-pointer"
+                     onclick="openImageLightbox('Ordination &amp; Events', 'งานบวช และงานพิธีต่างๆ', 'Photo / Video', [
+                         {
+                             album: 'Ordination',
+                             images: [
+                                 'https://images.unsplash.com/photo-1544866606-25816911c03e?q=80&w=1200&auto=format&fit=crop',
+                                 'https://images.unsplash.com/photo-1567521464027-f127ff144326?q=80&w=1200&auto=format&fit=crop'
+                             ]
+                         },
+                         {
+                             album: 'Event',
+                             images: [
+                                 'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=1200&auto=format&fit=crop',
+                                 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=1200&auto=format&fit=crop'
+                             ]
+                         }
+                     ])">
+                    <img class="slide-img active" src="https://images.unsplash.com/photo-1544866606-25816911c03e?q=80&w=800&auto=format&fit=crop" alt="">
+                    <img class="slide-img" src="https://images.unsplash.com/photo-1567521464027-f127ff144326?q=80&w=800&auto=format&fit=crop" alt="">
+                    <img class="slide-img" src="https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=800&auto=format&fit=crop" alt="">
+                    <div class="overlay"></div>
+                    <div class="card-content">
+                        <span class="text-gray-200 text-[9px] tracking-[0.2em] uppercase mb-1.5 border border-gray-400/40 px-2.5 py-1 w-max backdrop-blur-sm">Photo / Video</span>
+                        <h4 class="text-white text-lg font-light">Ordination &amp; Events</h4>
+                        <p class="text-gray-400 text-xs mt-1 font-light">งานบวช และงานพิธีต่างๆ</p>
+                        <p class="text-brand/60 text-[9px] mt-2 tracking-wider uppercase flex items-center gap-1">
+                            <i class="fas fa-images text-xs"></i> กดเพื่อชมผลงาน
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 6. CTA Card -->
+                <div class="relative bg-[#0e0e0e] aspect-[4/5] cursor-pointer flex flex-col items-center justify-center text-center p-8 border border-white/10 hover:border-brand/40 transition-all duration-500 group"
+                     onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">
+                    <img src="assets/Final ไม่มีตัวอักษร ไม่มีพื้นหลัง.png"
+                         alt="Baanchan Studio"
+                         class="h-16 w-auto mx-auto mb-6 opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500">
+                    <p class="text-gray-300 text-sm font-light tracking-wide mb-6">พร้อมเริ่มโปรเจกต์ถัดไป<br>ของคุณกับเรา</p>
+                    <span class="border border-gray-500/40 text-gray-300 px-6 py-2.5 text-[10px] tracking-[0.2em] uppercase group-hover:border-brand group-hover:text-brand transition-all duration-300">
+                        Start Project
+                    </span>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- 5. CONTACT SECTION                           -->
+    <!-- ============================================ -->
+    <section id="contact" class="py-24 md:py-32 px-6 bg-texture border-t border-white/5">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="mb-16">
+                <h2 class="text-2xl md:text-4xl text-white font-light mb-3">เริ่มต้นโปรเจกต์ ปรึกษางานกับเรา</h2>
+                <p class="text-brand tracking-[0.3em] uppercase text-[10px] md:text-xs font-light">Let's Talk • Start a Project</p>
+            </div>
+
+            <div class="bg-dark/50 border border-white/10 p-10 md:p-16 backdrop-blur-sm">
+                <h3 class="text-xl md:text-2xl text-white font-light mb-1">ติดต่อเรา</h3>
+                <p class="text-brand tracking-[0.3em] uppercase text-[10px] mb-10 font-light">Contact Us</p>
+
+                <!-- Social icons -->
+                <div class="flex justify-center gap-4 md:gap-6 mb-8">
+                    <a href="https://www.facebook.com/people/Baanchan-Studio/61574810865271/?locale=th_TH" target="_blank" rel="noopener noreferrer"
+                       class="social-icon w-14 h-14 rounded-full border border-gray-600 flex items-center justify-center text-lg text-gray-300 hover:border-[#1877F2] hover:text-[#1877F2] hover:scale-110 transition-all duration-300" title="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://www.instagram.com/baanchan_studio/" target="_blank" rel="noopener noreferrer"
+                       class="social-icon w-14 h-14 rounded-full border border-gray-600 flex items-center justify-center text-lg text-gray-300 hover:border-[#E1306C] hover:text-[#E1306C] hover:scale-110 transition-all duration-300" title="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://www.tiktok.com/@baanchan_studio" target="_blank" rel="noopener noreferrer"
+                       class="social-icon w-14 h-14 rounded-full border border-gray-600 flex items-center justify-center text-lg text-gray-300 hover:border-white hover:text-white hover:scale-110 transition-all duration-300" title="TikTok">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                    <a href="https://lin.ee/GzTqfhB" target="_blank" rel="noopener noreferrer"
+                       class="social-icon w-14 h-14 rounded-full border border-gray-600 flex items-center justify-center text-lg text-gray-300 hover:border-[#00B900] hover:text-[#00B900] hover:scale-110 transition-all duration-300" title="LINE">
+                        <i class="fab fa-line"></i>
+                    </a>
+                    <a href="tel:+66959649133"
+                       class="social-icon w-14 h-14 rounded-full border border-gray-600 flex items-center justify-center text-lg text-gray-300 hover:border-brand hover:text-brand hover:scale-110 transition-all duration-300" title="โทรหาเรา">
+                        <i class="fas fa-phone"></i>
+                    </a>
+                </div>
+
+                <p class="text-gray-500 font-light text-sm">
+                    Inbox หรือ Add LINE เพื่อสอบถามคิวงานและประเมินราคาก่อนได้เลยครับ
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- FOOTER                                       -->
+    <!-- ============================================ -->
+    <footer class="py-10 bg-[#040404] text-center border-t border-white/5">
+        <div class="flex items-center justify-center mb-4">
+            <img src="assets/Final ไม่มีตัวอักษร ไม่มีพื้นหลัง.png"
+                 alt="Baanchan Studio"
+                 class="h-9 w-auto opacity-50 hover:opacity-80 transition-opacity duration-300">
+        </div>
+        <!-- Footer social links -->
+        <div class="flex justify-center gap-4 mb-5">
+            <a href="https://www.facebook.com/people/Baanchan-Studio/61574810865271/?locale=th_TH" target="_blank" rel="noopener noreferrer"
+               class="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-gray-600 hover:border-[#1877F2] hover:text-[#1877F2] transition-all duration-300 text-xs" title="Facebook">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="https://www.instagram.com/baanchan_studio/" target="_blank" rel="noopener noreferrer"
+               class="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-gray-600 hover:border-[#E1306C] hover:text-[#E1306C] transition-all duration-300 text-xs" title="Instagram">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <a href="https://www.tiktok.com/@baanchan_studio" target="_blank" rel="noopener noreferrer"
+               class="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-gray-600 hover:border-white hover:text-white transition-all duration-300 text-xs" title="TikTok">
+                <i class="fab fa-tiktok"></i>
+            </a>
+            <a href="https://lin.ee/GzTqfhB" target="_blank" rel="noopener noreferrer"
+               class="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-gray-600 hover:border-[#00B900] hover:text-[#00B900] transition-all duration-300 text-xs" title="LINE">
+                <i class="fab fa-line"></i>
+            </a>
+        </div>
+        <p class="text-[10px] text-gray-600 tracking-[0.2em] uppercase">
+            &copy; 2026 Baanchan Studio. All Rights Reserved.
+        </p>
+    </footer>
+
+    <!-- ============================================ -->
+    <!-- LIGHTBOX                                     -->
+    <!-- ============================================ -->
+    <div id="lightbox" role="dialog" aria-modal="true">
+
+        <!-- Close button -->
+        <button id="lb-close" onclick="closeLightbox()" aria-label="Close">
+            <i class="fas fa-times"></i>
+        </button>
+
+        <!-- ===== IMAGE LIGHTBOX ===== -->
+        <div id="lb-image-wrap">
+            <!-- Left: Album sidebar -->
+            <div id="lb-album-sidebar">
+                <!-- Albums injected by JS -->
+            </div>
+
+            <!-- Right: Photo panel -->
+            <div id="lb-photo-panel">
+                <!-- Main image viewer -->
+                <div id="lb-photo-main">
+                    <img id="lb-main-img" src="" alt="Portfolio image">
+                    <button class="lb-img-arrow prev" id="lb-img-prev" onclick="imgPrev()" aria-label="Previous image">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="lb-img-arrow next" id="lb-img-next" onclick="imgNext()" aria-label="Next image">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+
+                <!-- Filmstrip -->
+                <div id="lb-filmstrip">
+                    <!-- Thumbnails injected by JS -->
+                </div>
+
+                <!-- Caption -->
+                <div class="lb-caption-bar">
+                    <div>
+                        <h4 id="lb-img-title"></h4>
+                        <p id="lb-img-subtitle"></p>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <span class="lb-counter" id="lb-img-counter"></span>
+                        <span class="lb-tag" id="lb-img-tag"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== VIDEO LIGHTBOX ===== -->
+        <div id="lb-video-wrap">
+            <!-- Left/Main: Video area -->
+            <div id="lb-video-main">
+                <div id="lb-video-player-wrap">
+                    <video id="lb-video-player" controls playsinline preload="metadata"></video>
+                    <button class="lb-vid-arrow prev" id="lb-vid-prev" onclick="vidPrev()" aria-label="Previous video">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="lb-vid-arrow next" id="lb-vid-next" onclick="vidNext()" aria-label="Next video">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+
+                <!-- Video clip thumbnail strip -->
+                <div id="lb-vid-clipstrip">
+                    <!-- Injected by JS -->
+                </div>
+
+                <!-- Video caption -->
+                <div id="lb-video-caption">
+                    <div>
+                        <h4 id="lb-vid-title"></h4>
+                        <p id="lb-vid-subtitle"></p>
+                    </div>
+                    <span class="lb-tag" id="lb-vid-tag"></span>
+                </div>
+            </div>
+
+            <!-- Right: Grab stills sidebar -->
+            <div id="lb-grabs-sidebar">
+                <div class="lb-grabs-label">Grab Stills</div>
+                <!-- Injected by JS -->
+            </div>
+        </div>
+
+    </div><!-- #lightbox -->
+
+    <!-- Grab Still Fullview Overlay -->
+    <div id="grab-fullview" onclick="if(event.target===this)closeGrabFullview()">
+        <button id="grab-fullview-close" onclick="closeGrabFullview()" aria-label="Close fullview">
+            <i class="fas fa-times"></i>
+        </button>
+        <img id="grab-fullview-img" src="" alt="Grab Still Fullview">
+    </div>
+
+
+    <!-- SCRIPTS                                      -->
+    <!-- ============================================ -->
+    <script>
+        /* ===== MOBILE MENU ===== */
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const btn  = document.getElementById('mobile-menu-btn');
+            menu.classList.toggle('hidden');
+            btn.querySelector('i').className = menu.classList.contains('hidden') ? 'fas fa-bars' : 'fas fa-times';
+        }
+
+        /* ===== SCROLL NAV ===== */
+        const nav = document.getElementById('main-nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 80) {
+                nav.style.background = 'rgba(8,8,8,0.95)';
+                nav.style.backdropFilter = 'blur(12px)';
+            } else {
+                nav.style.background = '';
+                nav.style.backdropFilter = '';
+            }
+        });
+
+        /* ===== CARD SLIDESHOW ===== */
+        document.querySelectorAll('.work-card').forEach(card => {
+            const imgs = card.querySelectorAll('.slide-img');
+            if (imgs.length < 2) return;
+            let cur = 0;
+            const offset = Math.random() * 2000;
+            setTimeout(() => {
+                setInterval(() => {
+                    const prev = cur;
+                    imgs[prev].classList.remove('active');
+                    imgs[prev].classList.add('prev');
+                    cur = (cur + 1) % imgs.length;
+                    imgs[cur].classList.add('active');
+                    setTimeout(() => imgs[prev].classList.remove('prev'), 1400);
+                }, 4200);
+            }, offset);
+        });
+
+        /* =====================================================================
+           LIGHTBOX — Album-based
+        ===================================================================== */
+
+        /* ---- State ---- */
+        let lbMode         = '';   // 'image' | 'video'
+        let imgAlbums      = [];   // [{album, images}]
+        let imgAlbumIdx    = 0;    // active album
+        let imgPhotoIdx    = 0;    // active photo inside album
+        let vidClips       = [];   // [{title, src, grabs:[]}]
+        let vidIdx         = 0;    // active video clip
+
+        /* ---- Helpers ---- */
+        function openLb() {
+            const lb = document.getElementById('lightbox');
+            lb.classList.add('open');
+            document.body.style.overflow = 'hidden';
+            // Push a history state so browser back gesture closes lightbox instead of leaving the page
+            history.pushState({ lightbox: true }, '');
+        }
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('open');
+            document.body.style.overflow = '';
+            document.onkeydown = null;
+            const player = document.getElementById('lb-video-player');
+            if (player) { player.pause(); player.src = ''; }
+        }
+
+        // Intercept browser back gesture / back button
+        window.addEventListener('popstate', function(e) {
+            const fv = document.getElementById('grab-fullview');
+            const lb = document.getElementById('lightbox');
+            // Layer 1: GrabStill fullview is open → close only fullview
+            if (fv && fv.classList.contains('open')) {
+                closeGrabFullview();
+                return;
+            }
+            // Layer 2: Lightbox is open → close lightbox
+            if (lb.classList.contains('open')) {
+                closeLightbox();
+            }
+        });
+
+        /* =================================================================
+           IMAGE LIGHTBOX
+        ================================================================= */
+        function openImageLightbox(title, subtitle, tag, albums) {
+            lbMode    = 'image';
+            imgAlbums = albums;
+            imgAlbumIdx = 0;
+            imgPhotoIdx = 0;
+
+            // Show image wrap, hide video
+            document.getElementById('lb-image-wrap').classList.add('active');
+            document.getElementById('lb-video-wrap').classList.remove('active');
+
+            // Set caption
+            document.getElementById('lb-img-title').textContent    = title;
+            document.getElementById('lb-img-subtitle').textContent = subtitle;
+            document.getElementById('lb-img-tag').textContent      = tag;
+
+            renderAlbumSidebar();
+            selectAlbum(0);
+            openLb();
+            setupImgSwipe();
+            setupKeyboard();
+        }
+
+        function renderAlbumSidebar() {
+            const sidebar = document.getElementById('lb-album-sidebar');
+            sidebar.innerHTML = imgAlbums.map((alb, i) => {
+                const cover = alb.images[0] || '';
+                return `
+                <div class="lb-album-card ${i === 0 ? 'active' : ''}" id="alb-${i}" onclick="selectAlbum(${i})">
+                    <img src="${cover}" alt="${alb.album}" loading="lazy">
+                    <div class="lb-album-card-label">
+                        <span>${alb.album}</span>
+                        <span class="alb-count">${alb.images.length}</span>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function selectAlbum(idx) {
+            imgAlbumIdx = idx;
+            imgPhotoIdx = 0;
+
+            // Update sidebar active state
+            document.querySelectorAll('.lb-album-card').forEach((el, i) => {
+                el.classList.toggle('active', i === idx);
+            });
+
+            // Render filmstrip
+            renderFilmstrip();
+            showPhoto(0);
+        }
+
+        function renderFilmstrip() {
+            const album  = imgAlbums[imgAlbumIdx];
+            const strip  = document.getElementById('lb-filmstrip');
+            strip.innerHTML = album.images.map((src, i) => `
+                <div class="lb-film-item ${i === 0 ? 'active' : ''}" id="film-${i}" onclick="showPhoto(${i})">
+                    <img src="${src}" alt="">
+                </div>
+            `).join('');
+        }
+
+        function showPhoto(idx) {
+            const album = imgAlbums[imgAlbumIdx];
+            if (idx < 0 || idx >= album.images.length) return;
+            imgPhotoIdx = idx;
+
+            const mainImg = document.getElementById('lb-main-img');
+            mainImg.style.opacity = '0';
+            setTimeout(() => {
+                mainImg.src = album.images[idx];
+                mainImg.style.opacity = '1';
+            }, 150);
+
+            // Update filmstrip active
+            document.querySelectorAll('.lb-film-item').forEach((el, i) => {
+                el.classList.toggle('active', i === idx);
+            });
+            // Scroll active thumb into view
+            const active = document.getElementById(`film-${idx}`);
+            if (active) active.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+
+            // Update counter
+            document.getElementById('lb-img-counter').textContent =
+                `${idx + 1} / ${album.images.length}`;
+
+            // Show/hide arrows
+            document.getElementById('lb-img-prev').style.display = album.images.length > 1 ? 'flex' : 'none';
+            document.getElementById('lb-img-next').style.display = album.images.length > 1 ? 'flex' : 'none';
+        }
+
+        function imgNext() {
+            const len = imgAlbums[imgAlbumIdx].images.length;
+            showPhoto((imgPhotoIdx + 1) % len);
+        }
+        function imgPrev() {
+            const len = imgAlbums[imgAlbumIdx].images.length;
+            showPhoto((imgPhotoIdx - 1 + len) % len);
+        }
+
+        /* =================================================================
+           VIDEO LIGHTBOX
+        ================================================================= */
+        function openVideoLightbox(title, subtitle, tag, clips) {
+            lbMode   = 'video';
+            vidClips = clips;
+            vidIdx   = 0;
+
+            // Show video wrap, hide image
+            document.getElementById('lb-video-wrap').classList.add('active');
+            document.getElementById('lb-image-wrap').classList.remove('active');
+
+            document.getElementById('lb-vid-subtitle').textContent = subtitle;
+            document.getElementById('lb-vid-tag').textContent      = tag;
+
+            renderClipStrip();
+            selectVideo(0);
+            openLb();
+            setupKeyboard();
+        }
+
+        function renderClipStrip() {
+            const strip = document.getElementById('lb-vid-clipstrip');
+            // Hide strip if only 1 clip
+            strip.style.display = vidClips.length < 2 ? 'none' : 'flex';
+            strip.innerHTML = vidClips.map((clip, i) => {
+                const thumb = (clip.grabs && clip.grabs[0]) ? clip.grabs[0] : '';
+                return `
+                <div class="lb-clip-item ${i === 0 ? 'active' : ''}" id="clip-thumb-${i}" onclick="selectVideo(${i})">
+                    ${thumb ? `<img src="${thumb}" alt="${clip.title}" loading="lazy">` : '<div style="width:100%;height:100%;background:#1a1a1a"></div>'}
+                    <div class="lb-clip-play-icon"><i class="fas fa-play"></i></div>
+                    <div class="lb-clip-item-label">${clip.title}</div>
+                </div>`;
+            }).join('');
+        }
+
+        function selectVideo(idx) {
+            if (idx < 0 || idx >= vidClips.length) return;
+            vidIdx = idx;
+            const clip = vidClips[idx];
+
+            // Update title
+            document.getElementById('lb-vid-title').textContent = clip.title;
+
+            // Load video
+            const player = document.getElementById('lb-video-player');
+            player.src = clip.src;
+            player.load();
+            player.play().catch(() => {});
+
+            // Show/hide nav arrows
+            document.getElementById('lb-vid-prev').style.display = vidClips.length > 1 ? 'flex' : 'none';
+            document.getElementById('lb-vid-next').style.display = vidClips.length > 1 ? 'flex' : 'none';
+
+            // Update clip strip active state
+            document.querySelectorAll('.lb-clip-item').forEach((el, i) => {
+                el.classList.toggle('active', i === idx);
+            });
+            const activeThumb = document.getElementById(`clip-thumb-${idx}`);
+            if (activeThumb) activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+
+            // Render grab stills
+            renderGrabs(clip.grabs);
+        }
+
+        function renderGrabs(grabs) {
+            const sidebar = document.getElementById('lb-grabs-sidebar');
+            const label = sidebar.querySelector('.lb-grabs-label');
+            sidebar.innerHTML = '';
+            if (label) sidebar.appendChild(label);
+
+            grabs.forEach((src, i) => {
+                const el = document.createElement('div');
+                el.className = `lb-grab-item ${i === 0 ? 'active' : ''}`;
+                el.id = `grab-${i}`;
+                el.innerHTML = `
+                    <img src="${src}" alt="Grab Still ${i+1}">
+                    <div class="lb-grab-zoom"><i class="fas fa-expand"></i></div>
+                `;
+                // Single click/tap → mark active + open fullview immediately
+                el.addEventListener('click', () => {
+                    document.querySelectorAll('.lb-grab-item').forEach(g => g.classList.remove('active'));
+                    el.classList.add('active');
+                    openGrabFullview(src);
+                });
+                sidebar.appendChild(el);
+            });
+        }
+
+        /* Open grab still fullview overlay */
+        function openGrabFullview(src) {
+            const fv = document.getElementById('grab-fullview');
+            const fvImg = document.getElementById('grab-fullview-img');
+            fvImg.src = src;
+            fv.classList.add('open');
+            // Push a separate history state so back gesture closes fullview only
+            history.pushState({ grabFullview: true }, '');
+        }
+        function closeGrabFullview() {
+            const fv = document.getElementById('grab-fullview');
+            fv.classList.remove('open');
+        }
+
+        function vidNext() { selectVideo((vidIdx + 1) % vidClips.length); }
+        function vidPrev() { selectVideo((vidIdx - 1 + vidClips.length) % vidClips.length); }
+
+        /* =================================================================
+           KEYBOARD NAVIGATION
+        ================================================================= */
+        function setupKeyboard() {
+            document.onkeydown = e => {
+                if (e.key === 'Escape') {
+                    const fv = document.getElementById('grab-fullview');
+                    if (fv && fv.classList.contains('open')) {
+                        // Close fullview first, then stay in lightbox
+                        history.back();
+                    } else {
+                        closeLightbox();
+                    }
+                    return;
+                }
+                if (lbMode === 'image') {
+                    if (e.key === 'ArrowRight') imgNext();
+                    if (e.key === 'ArrowLeft')  imgPrev();
+                } else if (lbMode === 'video') {
+                    if (e.key === 'ArrowRight') vidNext();
+                    if (e.key === 'ArrowLeft')  vidPrev();
+                }
+            };
+        }
+
+        /* =================================================================
+           TOUCH / SWIPE — image main area
+        ================================================================= */
+        function setupImgSwipe() {
+            const el = document.getElementById('lb-photo-main');
+            let startX = 0, startY = 0;
+
+            el.addEventListener('touchstart', e => {
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+            }, { passive: true });
+
+            el.addEventListener('touchend', e => {
+                const dx = e.changedTouches[0].clientX - startX;
+                const dy = e.changedTouches[0].clientY - startY;
+                if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
+                    if (dx < 0) imgNext(); else imgPrev();
+                }
+            }, { passive: true });
+        }
+
+        /* Close lightbox when clicking backdrop */
+        document.getElementById('lightbox').addEventListener('click', function(e) {
+            if (e.target === this) closeLightbox();
+        });
+
+        /* =================================================================
+           INTERSECTION OBSERVER (fade in services)
+        ================================================================= */
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.style.opacity = '1';
+                    e.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+        document.querySelectorAll('.service-item').forEach((el, i) => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(18px)';
+            el.style.transition = `all 0.6s ease ${i * 0.1}s`;
+            observer.observe(el);
+        });
+    </script>
+
+</body>
+</html>

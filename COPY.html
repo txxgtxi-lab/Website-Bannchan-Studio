@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baanchan Studio | Cinematography & Photography</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome for Social Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Prompt:wght@200;300;400;500&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        /* สีตามธีมโลโก้ Baanchan: ดำเทา และ สีทองแดง/ทองส้ม */
+                        brand: '#c29665', 
+                        dark: '#111111',   
+                        darker: '#080808'  
+                    },
+                    fontFamily: { 
+                        sans: ['Prompt', 'sans-serif'],
+                        serif: ['Cinzel', 'serif'] 
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #080808; color: #e5e5e5; }
+        
+        /* สไตล์พื้นหลังที่มี Texture เหมือนผนังในภาพ Rich Menu */
+        .bg-texture {
+            background-image: radial-gradient(circle at center, #1a1a1a 0%, #080808 100%);
+        }
+        
+        /* เมนูด้านบนโปร่งแสง */
+        .glass-nav { 
+            background: linear-gradient(to bottom, rgba(8,8,8,0.9) 0%, rgba(8,8,8,0) 100%); 
+        }
+
+        /* Hover Effect สำหรับรูปภาพให้ดูมีความพรีเมียม */
+        .work-card { overflow: hidden; }
+        .work-card img {
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: grayscale(40%) contrast(110%) brightness(70%);
+        }
+        .work-card:hover img {
+            transform: scale(1.05);
+            filter: grayscale(0%) contrast(100%) brightness(100%);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-brand selection:text-black font-sans">
+
+    <!-- 1. HEADER & NAVBAR -->
+    <nav class="fixed w-full z-50 glass-nav pt-6 pb-12 px-6">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <!-- โลโก้ตัวอักษร -->
+            <div class="text-center group cursor-pointer" onclick="window.scrollTo(0,0)">
+                <h1 class="text-3xl md:text-4xl font-serif text-white tracking-widest leading-none">B<span class="text-brand text-lg">.</span></h1>
+            </div>
+            
+            <!-- เมนู Desktop -->
+            <div class="hidden md:flex gap-10 text-xs tracking-[0.2em] font-light text-gray-400 uppercase">
+                <a href="#about" class="hover:text-brand transition duration-300">About</a>
+                <a href="#services" class="hover:text-brand transition duration-300">Services</a>
+                <a href="#works" class="hover:text-brand transition duration-300">Works</a>
+                <a href="#contact" class="hover:text-brand transition duration-300">Contact</a>
+            </div>
+
+            <!-- ปุ่มแฮมเบอร์เกอร์ มือถือ (ซ่อนไว้ทำระบบง่ายๆ) -->
+            <div class="md:hidden text-white text-xl">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 2. HERO SECTION (อิงจากภาพแบนเนอร์หลัก) -->
+    <section class="relative h-screen flex flex-col items-center justify-center text-center bg-texture px-6">
+        <!-- แสงสาดแบบ Cinematic -->
+        <div class="absolute top-0 right-0 w-full h-full opacity-30 pointer-events-none" 
+             style="background: linear-gradient(135deg, transparent 40%, rgba(194, 150, 101, 0.15) 100%);">
+        </div>
+
+        <div class="relative z-10 mt-16 flex flex-col items-center">
+            <h1 class="text-6xl md:text-8xl font-serif text-white mb-2 tracking-[0.1em]">B</h1>
+            <h2 class="text-xl md:text-3xl font-light text-white tracking-[0.3em] md:tracking-[0.5em] mb-2 uppercase">Baanchan</h2>
+            <p class="text-xs md:text-sm text-gray-400 tracking-[0.4em] uppercase mb-8">Studio</p>
+            
+            <div class="w-16 h-[1px] bg-brand mb-8"></div>
+            
+            <p class="text-[10px] md:text-xs text-brand tracking-[0.3em] uppercase leading-loose">
+                Cinematography <br class="md:hidden"> & Photography
+            </p>
+            <p class="text-xs text-gray-500 tracking-widest mt-4 uppercase">
+                Full-Service Production House
+            </p>
+        </div>
+        
+        <!-- เลื่อนลง -->
+        <a href="#services" class="absolute bottom-12 text-gray-600 hover:text-brand transition duration-300 animate-bounce">
+            <i class="fas fa-chevron-down text-xl"></i>
+        </a>
+    </section>
+
+    <!-- 3. ABOUT & SERVICES (บริการทั้งหมด) -->
+    <section id="services" class="py-24 px-6 bg-dark">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                <!-- ข้อความแนะนำตัว -->
+                <div>
+                    <h3 class="text-brand tracking-[0.3em] uppercase text-xs mb-4">About Us</h3>
+                    <h2 class="text-3xl md:text-4xl text-white font-light mb-6">BAANCHAN STUDIO</h2>
+                    <p class="text-gray-400 font-light text-sm leading-relaxed mb-8">
+                        แฝงตัวในทุกองค์ประกอบงานภาพยนตร์และงานโฆษณา ผ่านมุมมองและรสนิยมอย่างเอาใจใส่ เพื่อให้ผลงานของคุณออกมาสมบูรณ์แบบที่สุด ไม่ว่าจะเป็นสเกลงานระดับบุคคล หรือองค์กร
+                    </p>
+                    <a href="#contact" class="inline-block border border-gray-600 text-gray-300 px-8 py-3 text-xs tracking-widest uppercase hover:border-brand hover:text-brand transition duration-300">
+                        View More
+                    </a>
+                </div>
+
+                <!-- ลิสต์บริการ -->
+                <div class="grid grid-cols-2 gap-y-8 gap-x-4 border-l border-white/10 pl-8 md:pl-12">
+                    <div>
+                        <h4 class="text-white text-sm tracking-wider mb-2">Commercial & Production</h4>
+                        <p class="text-xs text-gray-500 font-light">วิดีโอโฆษณา, โปรดักชั่นเฮาส์, หนังสั้น, มิวสิควิดีโอ</p>
+                    </div>
+                    <div>
+                        <h4 class="text-white text-sm tracking-wider mb-2">Wedding & Pre-Wedding</h4>
+                        <p class="text-xs text-gray-500 font-light">ถ่ายภาพและวิดีโองานแต่ง, พรีเซนเทชั่น, ซีนีม่า</p>
+                    </div>
+                    <div>
+                        <h4 class="text-white text-sm tracking-wider mb-2">Fashion & Portrait</h4>
+                        <p class="text-xs text-gray-500 font-light">ถ่ายแฟชั่น, ถ่ายภาพบุคคล, โปรไฟล์สตูดิโอ</p>
+                    </div>
+                    <div>
+                        <h4 class="text-white text-sm tracking-wider mb-2">Event & Ceremony</h4>
+                        <p class="text-xs text-gray-500 font-light">ถ่ายภาพงานบวช, งานอีเวนต์ต่างๆ</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. SELECTED WORKS (ผลงานแยกตามหมวดหมู่) -->
+    <section id="works" class="py-24 px-6 bg-darker">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h3 class="text-white text-2xl md:text-3xl font-light mb-2">ชมผลงาน</h3>
+                <p class="text-brand tracking-[0.3em] uppercase text-xs">View Works</p>
+                <div class="w-12 h-[1px] bg-brand mx-auto mt-6"></div>
+            </div>
+
+            <!-- Grid ผลงาน -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <!-- 1. Commercial Video -->
+                <div class="work-card group relative bg-dark aspect-[4/5] cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1590602847861-f357a9332bbc?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover" alt="Commercial Production">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-6">
+                        <span class="text-brand text-[10px] tracking-[0.2em] uppercase mb-1 border border-brand px-2 py-0.5 w-max">Video</span>
+                        <h4 class="text-white text-lg font-light">Commercial Video</h4>
+                        <p class="text-gray-400 text-xs mt-1">วิดีโอโฆษณา & โปรโมทสินค้า</p>
+                    </div>
+                </div>
+
+                <!-- 2. Wedding & Pre-wedding -->
+                <div class="work-card group relative bg-dark aspect-[4/5] cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1606490206149-6441b83141f2?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover" alt="Wedding Photography">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-6">
+                        <span class="text-white text-[10px] tracking-[0.2em] uppercase mb-1 border border-white/50 px-2 py-0.5 w-max">Photo / Video</span>
+                        <h4 class="text-white text-lg font-light">Wedding & Pre-Wedding</h4>
+                        <p class="text-gray-400 text-xs mt-1">บันทึกความทรงจำวันสำคัญ</p>
+                    </div>
+                </div>
+
+                <!-- 3. Fashion & Portrait -->
+                <div class="work-card group relative bg-dark aspect-[4/5] cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover" alt="Fashion Portrait">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-6">
+                        <span class="text-white text-[10px] tracking-[0.2em] uppercase mb-1 border border-white/50 px-2 py-0.5 w-max">Photo</span>
+                        <h4 class="text-white text-lg font-light">Fashion & Portrait</h4>
+                        <p class="text-gray-400 text-xs mt-1">ถ่ายแฟชั่นและภาพบุคคล</p>
+                    </div>
+                </div>
+
+                <!-- 4. Studio Photography -->
+                <div class="work-card group relative bg-dark aspect-[4/5] cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1603574670812-d245b0afddfd?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover" alt="Studio Product">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-6">
+                        <span class="text-white text-[10px] tracking-[0.2em] uppercase mb-1 border border-white/50 px-2 py-0.5 w-max">Photo</span>
+                        <h4 class="text-white text-lg font-light">Studio Photography</h4>
+                        <p class="text-gray-400 text-xs mt-1">ถ่ายภาพสินค้าในสตูดิโอ</p>
+                    </div>
+                </div>
+
+                <!-- 6. Ordination / Event -->
+                <div class="work-card group relative bg-dark aspect-[4/5] cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1544866606-25816911c03e?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover" alt="Event & Ceremony">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-6">
+                        <span class="text-white text-[10px] tracking-[0.2em] uppercase mb-1 border border-white/50 px-2 py-0.5 w-max">Photo / Video</span>
+                        <h4 class="text-white text-lg font-light">Ordination & Events</h4>
+                        <p class="text-gray-400 text-xs mt-1">งานบวช และงานพิธีต่างๆ</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. CONTACT & FOOTER (อิงจากภาพแผงเมนูด้านล่าง) -->
+    <section id="contact" class="py-24 px-6 bg-texture border-t border-white/5">
+        <div class="max-w-4xl mx-auto text-center">
+            
+            <!-- ส่วน "เริ่มต้นโปรเจกต์ ปรึกษางานกับเรา" -->
+            <div class="mb-16">
+                <h2 class="text-3xl md:text-4xl text-white font-light mb-2">เริ่มต้นโปรเจกต์ ปรึกษางานกับเรา</h2>
+                <p class="text-brand tracking-[0.3em] uppercase text-sm">Let's Talk • Start a Project</p>
+            </div>
+
+            <!-- ส่วน "ติดต่อเรา CONTACT US" และปุ่ม Social -->
+            <div class="bg-dark/50 border border-white/10 p-10 md:p-16 rounded-sm backdrop-blur-sm">
+                <h3 class="text-2xl text-white font-light mb-1">ติดต่อเรา</h3>
+                <p class="text-brand tracking-[0.3em] uppercase text-xs mb-10">Contact Us</p>
+                
+                <!-- ไอคอน Social Media เรียงตามภาพ -->
+                <div class="flex justify-center gap-4 md:gap-6">
+                    <!-- Facebook -->
+                    <a href="#" class="w-14 h-14 rounded-full border border-gray-600 flex items-center justify-center text-xl text-gray-300 hover:border-brand hover:text-brand hover:scale-110 transition duration-300">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <!-- Instagram -->
+                    <a href="#" class="w-14 h-14 rounded-full border border-gray-600 flex items-center justify-center text-xl text-gray-300 hover:border-brand hover:text-brand hover:scale-110 transition duration-300">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <!-- TikTok -->
+                    <a href="#" class="w-14 h-14 rounded-full border border-gray-600 flex items-center justify-center text-xl text-gray-300 hover:border-brand hover:text-brand hover:scale-110 transition duration-300">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                    <!-- LINE -->
+                    <a href="https://lin.ee/YOUR_LINE_ID" target="_blank" class="w-14 h-14 rounded-full border border-gray-600 flex items-center justify-center text-xl text-gray-300 hover:border-[#00B900] hover:text-[#00B900] hover:scale-110 transition duration-300">
+                        <i class="fab fa-line"></i>
+                    </a>
+                </div>
+                
+                <p class="text-gray-500 font-light text-sm mt-8">
+                    Inbox หรือ Add LINE เพื่อสอบถามคิวงานและประเมินราคาก่อนได้เลยครับ
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="py-8 bg-[#040404] text-center border-t border-white/5">
+        <p class="text-[10px] text-gray-600 tracking-[0.2em] uppercase">
+            © 2026 Baanchan Studio. All Rights Reserved.
+        </p>
+    </footer>
+
+</body>
+</html>
