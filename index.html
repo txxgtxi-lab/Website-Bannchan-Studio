@@ -1041,6 +1041,126 @@
         html {
             scroll-behavior: smooth;
         }
+
+        /* ===== FLOATING CONTACT BUTTONS ===== */
+        .floating-contact-group {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 10010; /* Higher than lightbox (9999) and grab-fullview (10000) */
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .floating-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Base style for icons */
+        .floating-btn i {
+            font-size: 22px;
+            transition: transform 0.3s ease;
+        }
+
+        /* Hover effects */
+        .floating-btn:hover {
+            transform: translateY(-4px) scale(1.08);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .floating-btn:hover i {
+            transform: scale(1.1);
+        }
+
+        /* LINE button style */
+        .floating-btn.btn-line {
+            background: rgba(6, 199, 85, 0.95);
+            border-color: rgba(6, 199, 85, 0.3);
+        }
+        .floating-btn.btn-line:hover {
+            background: rgb(5, 179, 76);
+            box-shadow: 0 8px 24px rgba(6, 199, 85, 0.5);
+        }
+
+        /* Messenger button style */
+        .floating-btn.btn-messenger {
+            background: rgba(0, 132, 255, 0.95);
+            border-color: rgba(0, 132, 255, 0.3);
+        }
+        .floating-btn.btn-messenger:hover {
+            background: rgb(0, 119, 230);
+            box-shadow: 0 8px 24px rgba(0, 132, 255, 0.5);
+        }
+
+        /* Phone button style */
+        .floating-btn.btn-phone {
+            background: rgba(194, 150, 101, 0.95); /* #c29665 brand color */
+            border-color: rgba(194, 150, 101, 0.3);
+        }
+        .floating-btn.btn-phone:hover {
+            background: rgb(179, 138, 91);
+            box-shadow: 0 8px 24px rgba(194, 150, 101, 0.5);
+        }
+
+        /* Labels on hover */
+        .floating-btn .btn-label {
+            position: absolute;
+            right: 62px;
+            background: rgba(12, 12, 12, 0.95);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 300;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(10px);
+            transition: all 0.25s ease;
+            pointer-events: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            font-family: 'Prompt', sans-serif;
+        }
+
+        .floating-btn:hover .btn-label {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+        }
+
+        @media (max-width: 640px) {
+            .floating-contact-group {
+                bottom: 20px;
+                right: 20px;
+                gap: 10px;
+            }
+            .floating-btn {
+                width: 46px;
+                height: 46px;
+            }
+            .floating-btn i {
+                font-size: 20px;
+            }
+            .floating-btn .btn-label {
+                display: none;
+            }
+        }
     </style>
 </head>
 
@@ -1147,20 +1267,20 @@
 
                 <!-- Services list -->
                 <div id="services" class="space-y-6 border-l border-white/10 pl-8 md:pl-12">
-                    <div class="service-item">
+                    <div class="service-item cursor-pointer" onclick="document.getElementById('card-commercial').scrollIntoView({behavior:'smooth', block:'center'})">
                         <h4 class="text-white text-sm tracking-wider mb-1.5">Commercial &amp; Production</h4>
                         <p class="text-xs text-gray-500 font-light">วิดีโอโฆษณา, โปรดักชั่นเฮาส์, หนังสั้น, มิวสิควิดีโอ
                         </p>
                     </div>
-                    <div class="service-item">
+                    <div class="service-item cursor-pointer" onclick="document.getElementById('card-wedding').scrollIntoView({behavior:'smooth', block:'center'})">
                         <h4 class="text-white text-sm tracking-wider mb-1.5">Wedding &amp; Pre-Wedding</h4>
                         <p class="text-xs text-gray-500 font-light">ถ่ายภาพและวิดีโองานแต่ง, พรีเซนเทชั่น, ซีนีม่า</p>
                     </div>
-                    <div class="service-item">
+                    <div class="service-item cursor-pointer" onclick="document.getElementById('card-fashion').scrollIntoView({behavior:'smooth', block:'center'})">
                         <h4 class="text-white text-sm tracking-wider mb-1.5">Fashion &amp; Portrait</h4>
                         <p class="text-xs text-gray-500 font-light">ถ่ายแฟชั่น, ถ่ายภาพบุคคล, โปรไฟล์สตูดิโอ</p>
                     </div>
-                    <div class="service-item">
+                    <div class="service-item cursor-pointer" onclick="document.getElementById('card-event').scrollIntoView({behavior:'smooth', block:'center'})">
                         <h4 class="text-white text-sm tracking-wider mb-1.5">Event &amp; Ceremony</h4>
                         <p class="text-xs text-gray-500 font-light">ถ่ายภาพงานบวช, งานอีเวนต์ต่างๆ</p>
                     </div>
@@ -1184,7 +1304,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
 
                 <!-- 1. Commercial Video (type=video, albums with grab stills) -->
-                <div class="work-card group aspect-[4/5] cursor-pointer" onclick="openVideoLightbox('Cinematography', 'Short Film & โฆษณา & Wedding', 'Video', [
+                <div id="card-commercial" class="work-card group aspect-[4/5] cursor-pointer" onclick="openVideoLightbox('Cinematography', 'Short Film & โฆษณา & Wedding', 'Video', [
                          {
                              title: 'Commercial Vol.1',
                              src: 'https://www.w3schools.com/html/mov_bbb.mp4',
@@ -1226,7 +1346,7 @@
                 </div>
 
                 <!-- 2. Wedding (type=image, albums) -->
-                <div class="work-card group aspect-[4/5] cursor-pointer" onclick="openImageLightbox('Wedding &amp; Pre-Wedding', 'บันทึกความทรงจำวันสำคัญ', 'Photo / Video', [
+                <div id="card-wedding" class="work-card group aspect-[4/5] cursor-pointer" onclick="openImageLightbox('Wedding &amp; Pre-Wedding', 'บันทึกความทรงจำวันสำคัญ', 'Photo / Video', [
                          {
                              album: 'Wedding Day',
                              images: [
@@ -1266,7 +1386,7 @@
                 </div>
 
                 <!-- 3. Fashion & Portrait (type=image, albums) -->
-                <div class="work-card group aspect-[4/5] cursor-pointer" onclick="openImageLightbox('Fashion &amp; Portrait', 'ถ่ายแฟชั่นและภาพบุคคล', 'Photo', [
+                <div id="card-fashion" class="work-card group aspect-[4/5] cursor-pointer" onclick="openImageLightbox('Fashion &amp; Portrait', 'ถ่ายแฟชั่นและภาพบุคคล', 'Photo', [
                          {
                              album: 'Fashion',
                              images: [
@@ -1336,7 +1456,7 @@
                 </div>
 
                 <!-- 5. Ordination / Event (type=image, albums) -->
-                <div class="work-card group aspect-[4/5] cursor-pointer" onclick="openImageLightbox('Ordination &amp; Events', 'งานบวช และงานพิธีต่างๆ', 'Photo / Video', [
+                <div id="card-event" class="work-card group aspect-[4/5] cursor-pointer" onclick="openImageLightbox('Ordination &amp; Events', 'งานบวช และงานพิธีต่างๆ', 'Photo / Video', [
                          {
                              album: 'Ordination',
                              images: [
@@ -1598,6 +1718,26 @@
             </a>
         </div>
     </div>
+
+    <!-- Floating Contact Action Group -->
+    <div class="floating-contact-group">
+        <!-- LINE OA -->
+        <a href="https://lin.ee/GzTqfhB" target="_blank" rel="noopener noreferrer" class="floating-btn btn-line" title="คุยทาง LINE">
+            <i class="fab fa-line"></i>
+            <span class="btn-label">LINE</span>
+        </a>
+        <!-- Facebook Messenger -->
+        <a href="https://m.me/61574810865271" target="_blank" rel="noopener noreferrer" class="floating-btn btn-messenger" title="คุยทาง Messenger">
+            <i class="fab fa-facebook-messenger"></i>
+            <span class="btn-label">Messenger</span>
+        </a>
+        <!-- Phone (โทร) -->
+        <button onclick="openPhoneModal(event)" class="floating-btn btn-phone" title="โทรติดต่อ">
+            <i class="fas fa-phone"></i>
+            <span class="btn-label">โทร</span>
+        </button>
+    </div>
+
     <!-- ============================================ -->
     <script>
         /* ===== MOBILE MENU ===== */
