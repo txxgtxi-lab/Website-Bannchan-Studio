@@ -642,7 +642,20 @@
         }
 
         /* ===== PHONE DROPDOWN ===== */
-        .phone-dropdown-wrap { position: relative; display: inline-flex; }
+        .phone-dropdown-wrap { position: relative; display: inline-flex; flex-shrink: 0; }
+        .phone-dropdown-wrap button {
+            appearance: none;
+            -webkit-appearance: none;
+            background: none;
+            padding: 0;
+            margin: 0;
+            border: none;
+            cursor: pointer;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
         #phone-popup {
             display: none;
             position: absolute;
@@ -1035,7 +1048,7 @@
                     </a>
                     <!-- Phone dropdown -->
                     <div class="phone-dropdown-wrap">
-                        <button onclick="togglePhoneMenu(event)"
+                        <button type="button" onclick="togglePhoneMenu(event)"
                            class="social-icon w-14 h-14 rounded-full border border-gray-600 flex items-center justify-center text-lg text-gray-300 hover:border-brand hover:text-brand hover:scale-110 transition-all duration-300" title="โทรหาเรา">
                             <i class="fas fa-phone"></i>
                         </button>
