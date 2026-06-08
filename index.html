@@ -371,6 +371,7 @@
             object-fit: contain;
             border-radius: 4px;
             box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9);
+            transition: opacity 0.15s ease;
         }
 
         #grab-fullview-close {
@@ -396,6 +397,58 @@
             border-color: #c29665;
             color: #c29665;
             transform: rotate(90deg) scale(1.1);
+        }
+
+        /* Grab fullview navigation arrows */
+        .grab-fv-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(8, 8, 8, 0.55);
+            border: 1px solid rgba(194, 150, 101, 0.25);
+            color: #c29665;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 101;
+            transition: all 0.25s ease;
+            backdrop-filter: blur(4px);
+            font-size: 14px;
+        }
+
+        .grab-fv-arrow:hover {
+            background: rgba(194, 150, 101, 0.2);
+            border-color: #c29665;
+            color: #fff;
+            transform: translateY(-50%) scale(1.08);
+        }
+
+        .grab-fv-arrow.prev {
+            left: 14px;
+        }
+
+        .grab-fv-arrow.next {
+            right: 14px;
+        }
+
+        /* Grab fullview counter */
+        #grab-fv-counter {
+            position: absolute;
+            bottom: 18px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            letter-spacing: 0.1em;
+            z-index: 101;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 5px 14px;
+            border-radius: 20px;
+            backdrop-filter: blur(4px);
         }
 
         /* Zoom-in hint badge on grab items */
@@ -1571,7 +1624,14 @@
         <button id="grab-fullview-close" onclick="closeGrabFullview()" aria-label="Close fullview">
             <i class="fas fa-times"></i>
         </button>
+        <button class="grab-fv-arrow prev" id="grab-fv-prev" onclick="grabPrev()" aria-label="Previous grab still">
+            <i class="fas fa-chevron-left"></i>
+        </button>
         <img id="grab-fullview-img" src="" alt="Grab Still Fullview">
+        <button class="grab-fv-arrow next" id="grab-fv-next" onclick="grabNext()" aria-label="Next grab still">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+        <span id="grab-fv-counter"></span>
     </div>
 
     <!-- Phone Bottom Sheet Modal -->
@@ -1661,6 +1721,8 @@
         let imgPhotoIdx = 0;    // active photo inside album
         let vidClips = [];   // [{title, src, grabs:[]}]
         let vidIdx = 0;    // active video clip
+        let grabStills = []; // current grab stills array for fullview nav
+        let grabIdx = 0;     // active grab still index in fullview
 
         /* ---- Helpers ---- */
         function openLb() {
@@ -1915,24 +1977,86 @@
                 el.addEventListener('click', () => {
                     document.querySelectorAll('.lb-grab-item').forEach(g => g.classList.remove('active'));
                     el.classList.add('active');
-                    openGrabFullview(src);
+                    openGrabFullview(i);
                 });
                 sidebar.appendChild(el);
             });
+
+            // Store grabs for fullview navigation
+            grabStills = grabs;
         }
 
         /* Open grab still fullview overlay */
-        function openGrabFullview(src) {
+        function openGrabFullview(idx) {
+            if (idx < 0 || idx >= grabStills.length) return;
+            grabIdx = idx;
             const fv = document.getElementById('grab-fullview');
             const fvImg = document.getElementById('grab-fullview-img');
-            fvImg.src = src;
+            fvImg.style.opacity = '0';
+            setTimeout(() => {
+                fvImg.src = grabStills[idx];
+                fvImg.style.opacity = '1';
+            }, 120);
             fv.classList.add('open');
-            // Push a separate history state so back gesture closes fullview only
-            history.pushState({ grabFullview: true }, '');
+
+            // Update counter
+            document.getElementById('grab-fv-counter').textContent = `${idx + 1} / ${grabStills.length}`;
+
+            // Show/hide arrows
+            const showArrows = grabStills.length > 1;
+            document.getElementById('grab-fv-prev').style.display = showArrows ? 'flex' : 'none';
+            document.getElementById('grab-fv-next').style.display = showArrows ? 'flex' : 'none';
+            document.getElementById('grab-fv-counter').style.display = showArrows ? 'block' : 'none';
+
+            // Update sidebar active state
+            document.querySelectorAll('.lb-grab-item').forEach((g, i) => g.classList.toggle('active', i === idx));
+            const activeGrab = document.getElementById(`grab-${idx}`);
+            if (activeGrab) activeGrab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+
+            // Push a separate history state so back gesture closes fullview only (only on first open)
+            if (!fv.dataset.historyPushed) {
+                history.pushState({ grabFullview: true }, '');
+                fv.dataset.historyPushed = 'true';
+            }
+
+            // Setup swipe for fullview
+            setupGrabSwipe();
         }
+
         function closeGrabFullview() {
             const fv = document.getElementById('grab-fullview');
             fv.classList.remove('open');
+            delete fv.dataset.historyPushed;
+        }
+
+        function grabNext() {
+            if (grabStills.length < 2) return;
+            openGrabFullview((grabIdx + 1) % grabStills.length);
+        }
+
+        function grabPrev() {
+            if (grabStills.length < 2) return;
+            openGrabFullview((grabIdx - 1 + grabStills.length) % grabStills.length);
+        }
+
+        /* Touch/swipe on grab fullview */
+        let grabSwipeSetup = false;
+        function setupGrabSwipe() {
+            if (grabSwipeSetup) return;
+            grabSwipeSetup = true;
+            const el = document.getElementById('grab-fullview');
+            let startX = 0, startY = 0;
+            el.addEventListener('touchstart', e => {
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+            }, { passive: true });
+            el.addEventListener('touchend', e => {
+                const dx = e.changedTouches[0].clientX - startX;
+                const dy = e.changedTouches[0].clientY - startY;
+                if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
+                    if (dx < 0) grabNext(); else grabPrev();
+                }
+            }, { passive: true });
         }
 
         function vidNext() { selectVideo((vidIdx + 1) % vidClips.length); }
@@ -1951,6 +2075,13 @@
                     } else {
                         closeLightbox();
                     }
+                    return;
+                }
+                // If grab fullview is open, arrow keys navigate grabs
+                const fv = document.getElementById('grab-fullview');
+                if (fv && fv.classList.contains('open')) {
+                    if (e.key === 'ArrowRight') { grabNext(); e.preventDefault(); }
+                    if (e.key === 'ArrowLeft') { grabPrev(); e.preventDefault(); }
                     return;
                 }
                 if (lbMode === 'image') {
