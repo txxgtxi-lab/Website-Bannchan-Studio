@@ -621,7 +621,6 @@
             min-height: 0;
             overflow: hidden;
         }
-
         #lb-video-player {
             width: 100%;
             height: 100%;
@@ -629,7 +628,13 @@
             display: block;
         }
 
-        /* Video nav arrows */
+        #lb-youtube-player {
+            position: absolute;
+            width: 100%;
+            height: calc(100% + 60px);
+            top: -60px;
+            border: 0;
+        }        /* Video nav arrows */
         .lb-vid-arrow {
             position: absolute;
             top: 50%;
@@ -761,25 +766,28 @@
 
         /* Video caption bar */
         #lb-video-caption {
-            padding: 10px 16px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 12px 18px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-shrink: 0;
+            background: rgba(8, 8, 8, 0.6);
+            gap: 12px;
         }
 
         #lb-video-caption h4 {
-            font-size: 13px;
-            font-weight: 300;
+            font-size: 15px;
+            font-weight: 400;
             color: #fff;
             margin: 0;
+            letter-spacing: 0.04em;
         }
 
         #lb-video-caption p {
             font-size: 11px;
             color: #888;
-            margin: 0;
+            margin: 4px 0 0;
         }
 
         #lb-video-caption .lb-tag {
@@ -1029,7 +1037,7 @@
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <!-- Logo icon-only in nav -->
             <div class="group cursor-pointer" onclick="window.scrollTo({top:0,behavior:'smooth'})">
-                <img src="assets/Final ไม่มีตัวอักษร ไม่มีพื้นหลัง.png" alt="Baanchan Studio"
+                <img src="assets/LOGO/Final ไม่มีตัวอักษร ไม่มีพื้นหลัง.png" alt="Baanchan Studio"
                     class="h-10 md:h-12 w-auto transition-all duration-300 group-hover:scale-105 group-hover:opacity-80">
             </div>
 
@@ -1077,7 +1085,7 @@
         <div class="relative z-10 flex flex-col items-center">
             <!-- Hero logo with text (Final ไม่มีพื้นหลัง) -->
             <div class="fade-up mb-8">
-                <img src="assets/Final ไม่มีพื้นหลัง.png" alt="Baanchan Studio" class="h-44 md:h-64 lg:h-72 w-auto">
+                <img src="assets/LOGO/Final ไม่มีพื้นหลัง.png" alt="Baanchan Studio" class="h-44 md:h-64 lg:h-72 w-auto">
             </div>
             <h1 class="sr-only">Baanchan Studio - Cinematography &amp; Photography</h1>
 
@@ -1164,41 +1172,73 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
 
                 <!-- 1. Commercial Video (type=video, albums with grab stills) -->
-                <div id="card-commercial" class="work-card group aspect-[4/5] cursor-pointer" onclick="openVideoLightbox('Cinematography', 'Short Film & โฆษณา & Wedding', 'Video', [
+                <div id="card-commercial" class="work-card group aspect-[4/5] cursor-pointer" onclick="openVideoLightbox('Cinematography', 'Short Film &amp; โฆษณา &amp; MV Cover', 'Video', [
                          {
-                             title: 'Commercial Vol.1',
-                             src: 'https://www.w3schools.com/html/mov_bbb.mp4',
+                             title: 'Listerine Pocketmist',
+                             src: 'assets/video/Listerine Pocketmist.mp4',
                              grabs: [
-                                 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?q=80&w=800&auto=format&fit=crop',
-                                 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=800&auto=format&fit=crop',
-                                 'https://images.unsplash.com/photo-1478720568477-152d9b164e26?q=80&w=800&auto=format&fit=crop'
+                                 'assets/Grab%20Still/Listerine%20Pocketmist/Still%202026-03-14%20223626_1.11.1_1.20.1.jpg',
+                                 'assets/Grab%20Still/Listerine%20Pocketmist/Still%202026-03-15%20122309_1.3.2.jpg',
+                                 'assets/Grab%20Still/Listerine%20Pocketmist/Still%202026-03-15%20122309_1.4.1.jpg',
+                                 'assets/Grab%20Still/Listerine%20Pocketmist/Still%202026-03-15%20122309_1.4.3.jpg',
+                                 'assets/Grab%20Still/Listerine%20Pocketmist/Still%202026-03-15%20122309_1.5.1.jpg',
+                                 'assets/Grab%20Still/Listerine%20Pocketmist/Still%202026-03-15%20184644_1.11.2.jpg',
+                                 'assets/Grab%20Still/Listerine%20Pocketmist/Still%202026-03-15%20184644_1.13.3.jpg',
+                                 'assets/Grab%20Still/Listerine%20Pocketmist/Still%202026-03-15%20184644_1.13.4.jpg',
+                                 'assets/Grab%20Still/Listerine%20Pocketmist/Still%202026-03-15%20184644_1.14.2.jpg',
+                                 'assets/Grab%20Still/Listerine%20Pocketmist/Still%202026-03-15%20184644_1.22.3.jpg'
                              ]
                          },
                          {
-                             title: 'Commercial Vol.2',
-                             src: 'https://www.w3schools.com/html/mov_bbb.mp4',
+                             title: 'Cover MV Peaky Blinders',
+                             src: 'assets/video/Cover MV Peaky Blinders.mov',
                              grabs: [
-                                 'https://images.unsplash.com/photo-1536240478700-b869ad10e2fd?q=80&w=800&auto=format&fit=crop',
-                                 'https://images.unsplash.com/photo-1533928298208-27ff66555d8d?q=80&w=800&auto=format&fit=crop'
+                                 'assets/Grab%20Still/Cover%20MV%20Peaky%20Blinders/Still%202026-06-08%20151335_1.2.1.jpg',
+                                 'assets/Grab%20Still/Cover%20MV%20Peaky%20Blinders/Still%202026-06-08%20151335_1.2.2.jpg',
+                                 'assets/Grab%20Still/Cover%20MV%20Peaky%20Blinders/Still%202026-06-08%20151335_1.2.3.jpg',
+                                 'assets/Grab%20Still/Cover%20MV%20Peaky%20Blinders/Still%202026-06-08%20151335_1.2.4.jpg',
+                                 'assets/Grab%20Still/Cover%20MV%20Peaky%20Blinders/Still%202026-06-08%20151335_1.2.5.jpg',
+                                 'assets/Grab%20Still/Cover%20MV%20Peaky%20Blinders/Still%202026-06-08%20151335_1.2.6.jpg'
+                             ]
+                         },
+                         {
+                             title: 'Cover Sherlock Holmes (2009)',
+                             src: 'assets/video/Cover Sherlock Holmes (2009).mov',
+                             grabs: [
+                                 'assets/Grab%20Still/Cover%20Sherlock%20Holmes%20(2009)/Still%202026-06-08%20151348_1.1.1.jpg',
+                                 'assets/Grab%20Still/Cover%20Sherlock%20Holmes%20(2009)/Still%202026-06-08%20151348_1.1.2.jpg',
+                                 'assets/Grab%20Still/Cover%20Sherlock%20Holmes%20(2009)/Still%202026-06-08%20151348_1.1.3.jpg',
+                                 'assets/Grab%20Still/Cover%20Sherlock%20Holmes%20(2009)/Still%202026-06-08%20151348_1.1.4.jpg',
+                                 'assets/Grab%20Still/Cover%20Sherlock%20Holmes%20(2009)/Still%202026-06-08%20151348_1.1.5.jpg',
+                                 'assets/Grab%20Still/Cover%20Sherlock%20Holmes%20(2009)/Still%202026-06-08%20151348_1.1.6.jpg',
+                                 'assets/Grab%20Still/Cover%20Sherlock%20Holmes%20(2009)/Still%202026-06-08%20151348_1.1.7.jpg',
+                                 'assets/Grab%20Still/Cover%20Sherlock%20Holmes%20(2009)/Still%202026-06-08%20151348_1.1.8.jpg',
+                                 'assets/Grab%20Still/Cover%20Sherlock%20Holmes%20(2009)/Still%202026-06-08%20151348_1.1.9.jpg'
                              ]
                          }
                      ])">
                     <!-- Slideshow images -->
                     <img class="slide-img active"
-                        src="https://images.unsplash.com/photo-1590602847861-f357a9332bbc?q=80&w=800&auto=format&fit=crop"
-                        alt="">
+                        src="assets/Grab%20Still/Listerine%20Pocketmist/Still%202026-03-14%20223626_1.11.1_1.20.1.jpg"
+                        alt="Listerine Pocketmist Still 1">
                     <img class="slide-img"
-                        src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=800&auto=format&fit=crop"
-                        alt="">
+                        src="assets/Grab%20Still/Cover%20MV%20Peaky%20Blinders/Still%202026-06-08%20151335_1.2.1.jpg"
+                        alt="Cover MV Peaky Blinders Still 1">
                     <img class="slide-img"
-                        src="https://images.unsplash.com/photo-1478720568477-152d9b164e26?q=80&w=800&auto=format&fit=crop"
-                        alt="">
+                        src="assets/Grab%20Still/Cover%20MV%20Peaky%20Blinders/Still%202026-06-08%20151335_1.2.3.jpg"
+                        alt="Cover MV Peaky Blinders Still 2">
+                    <img class="slide-img"
+                        src="assets/Grab%20Still/Cover%20Sherlock%20Holmes%20(2009)/Still%202026-06-08%20151348_1.1.1.jpg"
+                        alt="Cover Sherlock Holmes Still 1">
+                    <img class="slide-img"
+                        src="assets/Grab%20Still/Cover%20Sherlock%20Holmes%20(2009)/Still%202026-06-08%20151348_1.1.4.jpg"
+                        alt="Cover Sherlock Holmes Still 2">
                     <div class="overlay"></div>
                     <div class="card-content">
                         <span
                             class="text-brand text-[9px] tracking-[0.2em] uppercase mb-1.5 border border-brand/60 px-2.5 py-1 w-max backdrop-blur-sm">Video</span>
                         <h4 class="text-white text-lg font-light">Cinematography</h4>
-                        <p class="text-gray-400 text-xs mt-1 font-light">Short Film &amp; โฆษณา &amp; Wedding</p>
+                        <p class="text-gray-400 text-xs mt-1 font-light">Short Film &amp; โฆษณา &amp; MV Cover</p>
                         <p class="text-brand/60 text-[9px] mt-2 tracking-wider uppercase flex items-center gap-1">
                             <i class="fas fa-play-circle text-xs"></i> กดเพื่อชมผลงาน
                         </p>
@@ -1357,7 +1397,7 @@
                 <!-- 6. CTA Card -->
                 <div class="relative bg-[#0e0e0e] aspect-[4/5] cursor-pointer flex flex-col items-center justify-center text-center p-8 border border-white/10 hover:border-brand/40 transition-all duration-500 group"
                     onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">
-                    <img src="assets/Final ไม่มีตัวอักษร ไม่มีพื้นหลัง.png" alt="Baanchan Studio"
+                    <img src="assets/LOGO/Final ไม่มีตัวอักษร ไม่มีพื้นหลัง.png" alt="Baanchan Studio"
                         class="h-16 w-auto mx-auto mb-6 opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500">
                     <p class="text-gray-300 text-sm font-light tracking-wide mb-6">
                         พร้อมเริ่มโปรเจกต์ถัดไป<br>ของคุณกับเรา</p>
@@ -1429,7 +1469,7 @@
     <!-- ============================================ -->
     <footer class="py-10 bg-[#040404] text-center border-t border-white/5">
         <div class="flex items-center justify-center mb-4">
-            <img src="assets/Final ไม่มีตัวอักษร ไม่มีพื้นหลัง.png" alt="Baanchan Studio"
+            <img src="assets/LOGO/Final ไม่มีตัวอักษร ไม่มีพื้นหลัง.png" alt="Baanchan Studio"
                 class="h-9 w-auto opacity-50 hover:opacity-80 transition-opacity duration-300">
         </div>
 
@@ -1492,7 +1532,8 @@
             <!-- Left/Main: Video area -->
             <div id="lb-video-main">
                 <div id="lb-video-player-wrap">
-                    <video id="lb-video-player" controls playsinline preload="metadata"></video>
+                    <video id="lb-video-player" controls playsinline preload="metadata" class="w-full h-full object-contain" style="display: none;"></video>
+                    <iframe id="lb-youtube-player" style="display: none;" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                     <button class="lb-vid-arrow prev" id="lb-vid-prev" onclick="vidPrev()" aria-label="Previous video">
                         <i class="fas fa-chevron-left"></i>
                     </button>
@@ -1635,6 +1676,8 @@
             document.onkeydown = null;
             const player = document.getElementById('lb-video-player');
             if (player) { player.pause(); player.src = ''; }
+            const ytPlayer = document.getElementById('lb-youtube-player');
+            if (ytPlayer) { ytPlayer.src = ''; }
         }
 
         // Intercept browser back gesture / back button
@@ -1800,9 +1843,44 @@
 
             // Load video
             const player = document.getElementById('lb-video-player');
-            player.src = clip.src;
-            player.load();
-            player.play().catch(() => { });
+            const ytPlayer = document.getElementById('lb-youtube-player');
+
+            if (player) {
+                player.pause();
+                player.src = '';
+            }
+
+            const isYouTube = clip.src.includes('youtube.com') || clip.src.includes('youtu.be');
+
+            if (isYouTube) {
+                if (player) {
+                    player.style.display = 'none';
+                }
+                if (ytPlayer) {
+                    ytPlayer.style.display = 'block';
+                    
+                    let videoId = '';
+                    if (clip.src.includes('youtu.be/')) {
+                        videoId = clip.src.split('youtu.be/')[1].split('?')[0];
+                    } else if (clip.src.includes('v=')) {
+                        videoId = clip.src.split('v=')[1].split('&')[0];
+                    } else if (clip.src.includes('embed/')) {
+                        videoId = clip.src.split('embed/')[1].split('?')[0];
+                    }
+                    ytPlayer.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+                }
+            } else {
+                if (ytPlayer) {
+                    ytPlayer.style.display = 'none';
+                    ytPlayer.src = '';
+                }
+                if (player) {
+                    player.style.display = 'block';
+                    player.src = clip.src;
+                    player.load();
+                    player.play().catch(() => { });
+                }
+            }
 
             // Show/hide nav arrows
             document.getElementById('lb-vid-prev').style.display = vidClips.length > 1 ? 'flex' : 'none';
