@@ -90,6 +90,21 @@
             transform: scale(1.09);
         }
 
+        .work-card .card-video {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.5s ease, transform 8s ease;
+            transform: scale(1.06);
+            opacity: 0;
+        }
+
+        .work-card:hover .card-video {
+            transform: scale(1.09);
+        }
+
         .work-card .overlay {
             position: absolute;
             inset: 0;
@@ -1270,22 +1285,13 @@
                              ]
                          }
                      ])">
-                    <!-- Slideshow images -->
+                    <!-- Fallback image -->
                     <img class="slide-img active"
                         src="assets/Grab%20Still/Listerine%20Pocketmist/Still%202026-03-14%20223626_1.11.1_1.20.1.jpg"
-                        alt="Listerine Pocketmist Still 1">
-                    <img class="slide-img"
-                        src="assets/Grab%20Still/Cover%20MV%20Peaky%20Blinders/Still%202026-06-08%20151335_1.2.1.jpg"
-                        alt="Cover MV Peaky Blinders Still 1">
-                    <img class="slide-img"
-                        src="assets/Grab%20Still/Cover%20MV%20Peaky%20Blinders/Still%202026-06-08%20151335_1.2.3.jpg"
-                        alt="Cover MV Peaky Blinders Still 2">
-                    <img class="slide-img"
-                        src="assets/Grab%20Still/Cover%20Sherlock%20Holmes%20(2009)/Still%202026-06-08%20151348_1.1.1.jpg"
-                        alt="Cover Sherlock Holmes Still 1">
-                    <img class="slide-img"
-                        src="assets/Grab%20Still/Cover%20Sherlock%20Holmes%20(2009)/Still%202026-06-08%20151348_1.1.4.jpg"
-                        alt="Cover Sherlock Holmes Still 2">
+                        alt="Cinematography Preview Fallback">
+                    <!-- Autoplay preview video -->
+                    <video class="card-video"
+                        muted playsinline preload="metadata"></video>
                     <div class="overlay"></div>
                     <div class="card-content">
                         <span
@@ -2068,6 +2074,91 @@
             }, offset);
         });
 
+        /* ===== CARD VIDEO SLIDESHOW (Cinematography playlist) ===== */
+        const cardVideos = [
+            {
+                src: 'assets/video/Listerine Pocketmist.mp4',
+                poster: 'assets/Grab%20Still/Listerine%20Pocketmist/Still%202026-03-14%20223626_1.11.1_1.20.1.jpg'
+            },
+            {
+                src: 'assets/video/Cover MV Peaky Blinders.mov',
+                poster: 'assets/Grab%20Still/Cover%20MV%20Peaky%20Blinders/Still%202026-06-08%20151335_1.2.1.jpg'
+            },
+            {
+                src: 'assets/video/Cover Sherlock Holmes (2009).mov',
+                poster: 'assets/Grab%20Still/Cover%20Sherlock%20Holmes%20(2009)/Still%202026-06-08%20151348_1.1.1.jpg'
+            }
+        ];
+        
+        let currentCardVidIdx = 0;
+        let cardVidTimeout = null;
+        let isLightboxActive = false;
+        
+        const previewVidElement = document.querySelector('#card-commercial .card-video');
+        const fallbackImgElement = document.querySelector('#card-commercial .slide-img');
+        
+        function playNextCardVideo() {
+            if (!previewVidElement || isLightboxActive) return;
+            
+            const nextVid = cardVideos[currentCardVidIdx];
+            previewVidElement.style.opacity = '0'; // Fade out video
+            
+            // Wait for fade out animation to complete (matching transition 0.5s)
+            setTimeout(() => {
+                if (isLightboxActive) return;
+                
+                previewVidElement.src = nextVid.src;
+                previewVidElement.load();
+                
+                // One-shot metadata listener
+                const onMetadata = () => {
+                    const duration = previewVidElement.duration;
+                    if (duration && !isNaN(duration)) {
+                        previewVidElement.currentTime = duration / 2;
+                    }
+                    previewVidElement.removeEventListener('loadedmetadata', onMetadata);
+                };
+                previewVidElement.addEventListener('loadedmetadata', onMetadata);
+                
+                // One-shot seeked listener
+                const onSeeked = () => {
+                    if (isLightboxActive) return;
+                    previewVidElement.play().catch(e => {
+                        console.log("Card video play blocked:", e);
+                    });
+                    previewVidElement.removeEventListener('seeked', onSeeked);
+                };
+                previewVidElement.addEventListener('seeked', onSeeked);
+                
+                // One-shot playing listener
+                const onPlaying = () => {
+                    if (isLightboxActive) return;
+                    previewVidElement.style.opacity = '1'; // Fade in video
+                    
+                    // Hide the fallback image as soon as the first video plays, so subsequent transitions fade to black
+                    if (fallbackImgElement) {
+                        fallbackImgElement.style.display = 'none';
+                    }
+                    
+                    // Set timer to switch video in 5 seconds
+                    if (cardVidTimeout) clearTimeout(cardVidTimeout);
+                    cardVidTimeout = setTimeout(() => {
+                        currentCardVidIdx = (currentCardVidIdx + 1) % cardVideos.length;
+                        playNextCardVideo();
+                    }, 5000);
+                    
+                    previewVidElement.removeEventListener('playing', onPlaying);
+                };
+                previewVidElement.addEventListener('playing', onPlaying);
+                
+            }, 500);
+        }
+        
+        // Start the playlist cycle on page load
+        if (previewVidElement) {
+            setTimeout(playNextCardVideo, 800);
+        }
+
         /* =====================================================================
            LIGHTBOX — Album-based
         ===================================================================== */
@@ -2090,6 +2181,15 @@
             const lb = document.getElementById('lightbox');
             lb.classList.add('open');
             document.body.style.overflow = 'hidden';
+
+            isLightboxActive = true;
+            if (cardVidTimeout) clearTimeout(cardVidTimeout);
+
+            // Pause all background card videos when lightbox is open
+            document.querySelectorAll('.work-card video').forEach(video => {
+                video.pause();
+            });
+
             // Push a history state so browser back gesture closes lightbox instead of leaving the page
             if (!lbHistoryPushed) {
                 history.pushState({ lightbox: true }, '');
@@ -2106,6 +2206,9 @@
             if (player) { player.pause(); player.src = ''; }
             const ytPlayer = document.getElementById('lb-youtube-player');
             if (ytPlayer) { ytPlayer.src = ''; }
+
+            isLightboxActive = false;
+            playNextCardVideo();
 
             // Ensure fullview closes if it was open
             closeGrabFullview(isPopState);
